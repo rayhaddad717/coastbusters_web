@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Car</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+</head>
+
+<body>
+    <%- include('partials/navbar',{isLoggedIn}) %>
+        <h1>Kindly edit the below information at your convenience</h1>
+        <form action="/cars/<%=car.carModelID %>?_method=PATCH" method="POST">
+            <div class="container-fluid">
+                <div class=" row mt-2">
+                    <label class="col" for="carModelID">Car Name</label>
+                    <input class="col" type="text" name="CarModelID" id="namcarModelID" value="<%=car.carModelID%> "
+                        readonly>
+
+                </div>
+                <div class=" row mt-2">
+                    <label class="col" for="name">Car Name</label>
+                    <input class="col" type="text" name="Name" id="name" value="<%=car.name%> ">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="manufacturer">Car Manufacturer</label>
+                    <input class="col" type="text" name="Manufacturer" id="manufacturer" value="<%=car.manufacturer%> ">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="country">Country</label>
+                    <input class="col" type="text" name="Country" id="country" value="<%=car.country%> ">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="Year">Year</label>
+                    <input class="col" type="number" name="Year" id="Year" value="<%=car.year%>">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="BHP">BHP</label>
+                    <input class="col" type="number" name="BHP" id="BHP" value="<%=car.bhp%>">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="nbOfSeats">Number of Seats</label>
+                    <input class="col" type="number" name="NbOfSeats" id="nbOfSeats" value="<%=car.nbOfSeats%>">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="nbCarsLeft">nbCarsLeft</label>
+                    <input class="col" type="number" name="NbCarsLeft" id="nbCarsLeft" value="<%=car.nbCarsLeft%>">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="Engine Type">Engine Type</label>
+                    <input class="col" type="text" name="EngineType" id="Engine Type" value="<%=car.engineType%>">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="emissions">emissions</label>
+                    <input class="col" type="number" name="Emissions" id="emissions" value="<%=car.emissions%>">
+
+                </div>
+
+                <div class=" row mt-2">
+                    <label class="col" for="torque">torque</label>
+                    <input class="col" type=" number" name="Torque" id="torque" value="<%=car.torque%>">
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit Data</button>
+            <button class="btn btn-success" type="reset">Undo All Changes</button>
+            <form action="/cars">
+                <button class="btn btn-danger" type="submit">Cancel</button>
+            </form>
+        </form>
+</body>
+
+</html>

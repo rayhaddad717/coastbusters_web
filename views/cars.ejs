@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Cars</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+</head>
+
+<body>
+    <%- include('partials/navbar',{isLoggedIn}) %>
+        <%if(isLoggedIn) {%>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Car Model ID</th>
+                        <th>Name</th>
+                        <th>Manufacturer</th>
+                        <th>Counthy</th>
+                        <th>Year</th>
+                        <th>BHP</th>
+                        <th>Number of Seats</th>
+                        <th>Number of Cars Left</th>
+                        <th>Engine Type</th>
+                        <th>Emissions</th>
+                        <th>Torque</th>
+                        <th class="text-center" colspan="2">Buttons</th>
+                    </tr>
+                </thead>
+                <% for(let car of cars) {%>
+                    <tr>
+                        <% const
+                            {carModelID,name,manufacturer,country,year,bhp,nbOfSeats,nbCarsLeft,engineType,emissions,torque}=car;
+                            %>
+                            <% const
+                                info=[carModelID,name,manufacturer,country,year,bhp,nbOfSeats,nbCarsLeft,engineType,emissions,torque];
+                                %>
+                                <% for(let i of info) {%>
+
+                                    <td>
+                                        <%=i %>
+                                    </td>
+                                    <% } %>
+                                        <td>
+                                            <form action="/cars/<%=car.carModelID%>/edit" method="get">
+                                                <button class="btn btn-success">Edit</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/cars/<%=car.carModelID%>?_method=DELETE" method="POST">
+                                                <button class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </td>
+
+                    </tr>
+                    <%} %>
+            </table>
+            <form action="/cars/new" method="GET">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" type="submit">ADD A NEW CAR</button>
+
+                </div>
+            </form>
+            <%}else{ %>
+                <h1>You are not logged in.</h1>
+                <h2>Log in or create a new account</h2>
+                <% } %>
+</body>
+
+</html>

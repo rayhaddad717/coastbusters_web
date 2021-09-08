@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <%- include('partials/bootstrap') %>
+</head>
+
+<body>
+    <%- include('partials/navbar',{isLoggedIn}) %>
+
+        <p>You search for :
+            <%=query.q %> yielded the following results:
+                <% if(results){ %>
+                    <% for (let record of results.recordset) {%>
+                        <table>
+
+                            <% for (let [key, value] of Object.entries(record)) { %>
+                                <tr>
+                                    <td>
+                                        <%=key %>
+                                    </td>
+                                    <td>
+                                        <%=value %>
+                                    </td>
+                                </tr>
+                                <%} %>
+                        </table>
+                        <% } %>
+                            <% console.log(results.recordset[0]) %>
+                                <% }else{ %>
+                                    <h2>No results...</h2>
+                                    <% } %>
+        </p>
+</body>
+
+</html>

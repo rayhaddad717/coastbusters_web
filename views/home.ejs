@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coast Busters</title>
+    <!-- <link rel="stylesheet" href="./css/styles.css"> -->
+    <%- include('partials/bootstrap') %>
+</head>
+
+<body>
+    <%- include('partials/navbar',{isLoggedIn}) %>
+        <h1 class="ms-2">Hi and welcome to Coast Busters</h1>
+        <h3>Use the website</h3>
+        <h4><b>/cars to display all cars</b></h4>
+        <h4><b>/cars/id to display one car</b></h4>
+        <h4><b>/cars/id/edit to edit one car</b></h4>
+        <h4><b>/cars/id/new to add one car</b></h4>
+        <% if(isLoggedIn) {%>
+            <% const { personID, firstName, lastName, dateOfBirth, address, isCustomer, subscriptionID, accidentsMade,
+                nbOfRentedCars}=currentLoggedInUserPersonInfo %>
+                <h2 class="ms-2">Welcome back dear <%=firstName%>
+                </h2>
+
+
+                <ul>
+                    <% const info=[personID, firstName, lastName, dateOfBirth, address, isCustomer, subscriptionID,
+                        accidentsMade, nbOfRentedCars]; %>
+                        <% for(i of info){ %>
+                            <li>
+                                <%=i %>
+                            </li>
+                            <% } %>
+                </ul>
+                </div>
+                <% } %>
+</body>
+
+</html>
