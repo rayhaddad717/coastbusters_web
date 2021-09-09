@@ -13,11 +13,27 @@
 <body>
     <%- include('partials/navbar',{isLoggedIn}) %>
         <h1 class="ms-2">Hi and welcome to Coast Busters</h1>
-        <h3>Use the website</h3>
-        <h4><b>/cars to display all cars</b></h4>
-        <h4><b>/cars/id to display one car</b></h4>
-        <h4><b>/cars/id/edit to edit one car</b></h4>
-        <h4><b>/cars/id/new to add one car</b></h4>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Warning</strong> Please note that this website is still under construction. Not all features have
+            been implemented yet!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <h3>Kindly use the following to login:</h3>
+        <table>
+            <tr>
+                <th>Login</th>
+                <th>Password</th>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td>test</td>
+            </tr>
+        </table>
+        <h4>You can access the Cars tab to check what car models we offer</h4>
+        <h4>You can search for a specific car also ex:search bmw</h4>
+        <h5>here is your info</h5>
         <% if(isLoggedIn) {%>
             <% const { personID, firstName, lastName, dateOfBirth, address, isCustomer, subscriptionID, accidentsMade,
                 nbOfRentedCars}=currentLoggedInUserPersonInfo %>
