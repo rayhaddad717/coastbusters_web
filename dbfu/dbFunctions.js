@@ -1,31 +1,27 @@
 const mssql = require('mssql');
-
 const dbObjects = require('./dbObjects')
 const connectToDB = async () => {
     const config = {
-        user: 'rayhaddad_SQLLogin_1',
-        password: '4fggbv3oxi',
-        server: 'coastBusters.mssql.somee.com',
-
+        user: 'ray',
+        password: '1234',
+        server: 'localhost',
         options: {
             trustServerCertificate: true
         },
-        database: 'coastBusters'
+        database: 'Coast Busters'
     };
     try {
         await mssql.connect(config);
-        console.log('connected to db')
 
-    } catch (e) { console.log("There was an error to connect to db in dbFunctionsFile.", e) }
+    } catch { console.log("There was an error to connect to db in dbFunctionsFile.") }
 
 }
-
 //Function to search for a manufacturer
 //Search
 search = async function (searchText) {
     try {
         await connectToDB();
-        const result = await mssql.query(`SELECT * FROM [coastBusters].[dbo].[CarModels] where (Manufacturer) like '${searchText}%' OR (Name) like '${searchText}%'`)
+        const result = await mssql.query(`SELECT * FROM [Coast Busters].[dbo].[CarModels] where (Manufacturer) like '${searchText}%' OR (Name) like '${searchText}%'`)
         return result;
     } catch { console.log('some error happened') }
 
@@ -36,7 +32,7 @@ module.exports.search = search;
 //Function to get The logged in user login information
 getLoginCredentialsInfo = async function (loginID) {
     await connectToDB();
-    const info = await mssql.query(`select * from [coastBusters].[dbo].[LoginCredentials] where loginID=${loginID}`)
+    const info = await mssql.query(`select * from [Coast Busters].[dbo].[LoginCredentials] where loginID=${loginID}`)
     const { Password, isCustomer, PersonID } = info.recordset[0];
     return new dbObjects.LoginCredentialObject(loginID, PersonID, isCustomer)
 }
@@ -46,7 +42,7 @@ module.exports.getLoginCredentialsInfo = getLoginCredentialsInfo;
 getPersonInfo = async function (currentLoggedInUser) {
     try {
         await connectToDB();
-        const info = await mssql.query(`select * from [coastBusters].[dbo].[People] where personID=${currentLoggedInUser.personID}`)
+        const info = await mssql.query(`select * from [Coast Busters].[dbo].[People] where personID=${currentLoggedInUser.personID}`)
         const { FirstName, LastName, DateOfBirth, Address, SubscriptionID, IsACustomer: isCustomer, PersonID } = info.recordset[0];
 
         const person = new dbObjects.PersonObject(PersonID, FirstName, LastName, DateOfBirth, Address, SubscriptionID, isCustomer);
@@ -64,7 +60,7 @@ module.exports.getPersonInfo = getPersonInfo;
 const checkLogin = async (loginID, password) => {
     try {
         await connectToDB();
-        const result = await mssql.query(`select * from [coastBusters].[dbo].[LoginCredentials] where loginID=${loginID}`)
+        const result = await mssql.query(`select * from [Coast Busters].[dbo].[LoginCredentials] where loginID=${loginID}`)
         if (result.recordset.length === 0 || result.recordset.length > 1) {
             console.log('no such username')
             return false;
@@ -87,7 +83,7 @@ module.exports.checkLogin = checkLogin;
 //Get Rented Cars by Person
 const getRentedCarsByPerson = async function (personID) {
     await connectToDB();
-    const result = await mssql.query(`select * from [coastBusters].[dbo].AvailableCars where RentedByPersonID= ${personID}`)
+    const result = await mssql.query(`select * from [Coast Busters].[dbo].AvailableCars where RentedByPersonID= ${personID}`)
     return result;
 }
 module.exports.getRentedCarsByPerson = getRentedCarsByPerson;
@@ -102,14 +98,13 @@ const insertNewLoginUsingPersonInfo = async function (info) {
     const person = await insertNewPerson(info);
     const personID = person.personID;
     const config = {
-        user: 'rayhaddad_SQLLogin_1',
-        password: '4fggbv3oxi',
-        server: 'coastBusters.mssql.somee.com',
-
+        user: 'ray',
+        password: '1234',
+        server: 'localhost',
         options: {
             trustServerCertificate: true
         },
-        database: 'coastBusters'
+        database: 'Coast Busters'
     };
     try {
         info.isCustomer = (info.isCustomer ? 1 : 0);
@@ -118,7 +113,7 @@ const insertNewLoginUsingPersonInfo = async function (info) {
             .input('personID', mssql.NVarChar(20), personID)
             .input('password', mssql.NVarChar(20), info.password)
             .input('isCustomer', mssql.Bit, info.isCustomer)
-            .query('insert into [coastBusters].[dbo].LoginCredentials (PersonID,Password,isCustomer) values(@personID,@password,@isCustomer)');
+            .query('insert into [Coast Busters].[dbo].LoginCredentials (PersonID,Password,isCustomer) values(@personID,@password,@isCustomer)');
         const idResult = await mssql.query(`SELECT IDENT_CURRENT ('LoginCredentials') as id `)
         const loginID = idResult.recordset[0].id;
         const newLogin = new dbObjects.LoginCredentialObject(loginID, personID, info.isCustomer);
@@ -133,14 +128,13 @@ module.exports.insertNewLoginUsingPersonInfo = insertNewLoginUsingPersonInfo;
 //insert New Person
 const insertNewPerson = async function (info) {
     const config = {
-        user: 'rayhaddad_SQLLogin_1',
-        password: '4fggbv3oxi',
-        server: 'coastBusters.mssql.somee.com',
-
+        user: 'ray',
+        password: '1234',
+        server: 'localhost',
         options: {
             trustServerCertificate: true
         },
-        database: 'coastBusters'
+        database: 'Coast Busters'
     };
     if (info.isCustomer) {
         info = { ...info, AccidentsMade: 0, NbOfRentedCars: 0 };
@@ -156,7 +150,7 @@ const insertNewPerson = async function (info) {
             .input('subscriptionID', mssql.Int, info.subscriptionID)
             .input('AccidentsMade', mssql.Int, info.AccidentsMade)
             .input('NbOfRentedCars', mssql.Int, info.NbOfRentedCars)
-            .query('insert into [coastBusters].[dbo].People (FirstName,LastName,DateOfBirth,Address,SubscriptionID,isACustomer,AccidentsMade,NbOfRentedCars) values(@FN,@LN,@DOB,@address,@subscriptionID,@isACustomer,@AccidentsMade,@NbOfRentedCars)');
+            .query('insert into [Coast Busters].[dbo].People (FirstName,LastName,DateOfBirth,Address,SubscriptionID,isACustomer,AccidentsMade,NbOfRentedCars) values(@FN,@LN,@DOB,@address,@subscriptionID,@isACustomer,@AccidentsMade,@NbOfRentedCars)');
         if (result.rowsAffected === 0) {
             console.log('no rows were affected by inserting a person');
             return -1;
@@ -178,7 +172,7 @@ const insertNewSubscription = async function (type) {
 
     try {
         await connectToDB();
-        const result = await mssql.query(`insert into [coastBusters].[dbo].Subscriptions (SubscriptionTypeID,Status) values (${type},1)`)
+        const result = await mssql.query(`insert into [Coast Busters].[dbo].Subscriptions (SubscriptionTypeID,Status) values (${type},1)`)
         const idResult = await mssql.query(`SELECT IDENT_CURRENT ('Subscriptions') as id `)
         const subsID = idResult.recordset[0].id;
         const newSubscription = new dbObjects.SubscriptionObject(subsID, type);
@@ -193,7 +187,7 @@ const insertNewSubscription = async function (type) {
 const getAllCars = async function () {
     try {
         await connectToDB();
-        let cars = await mssql.query('select * from [coastBusters].[dbo].CarModels');
+        let cars = await mssql.query('select * from [Coast Busters].[dbo].CarModels');
         cars = cars.recordset;
         const carsArray = [];
         for (let car of cars) {
@@ -210,7 +204,7 @@ const getOneCar = async function (id) {
     try {
         console.log('entered')
         await connectToDB();
-        let cars = await mssql.query(`select * from [coastBusters].[dbo].CarModels where CarModelID=${id}`);
+        let cars = await mssql.query(`select * from [Coast Busters].[dbo].CarModels where CarModelID=${id}`);
         car = cars.recordset[0];
         return new dbObjects.CarModel({ ...car });
 
@@ -222,14 +216,13 @@ module.exports.getOneCar = getOneCar;
 //Insert a new Car Model
 const insertNewCarModel = async function (carModel) {
     const config = {
-        user: 'rayhaddad_SQLLogin_1',
-        password: '4fggbv3oxi',
-        server: 'coastBusters.mssql.somee.com',
-
+        user: 'ray',
+        password: '1234',
+        server: 'localhost',
         options: {
             trustServerCertificate: true
         },
-        database: 'coastBusters'
+        database: 'Coast Busters'
     };
     try {
         let pool = await mssql.connect(config)
@@ -244,7 +237,7 @@ const insertNewCarModel = async function (carModel) {
             .input('emissions', mssql.Int, carModel.emissions)
             .input('nbOfSeats', mssql.Int, carModel.nbOfSeats)
             .input('nbCarsLeft', mssql.Int, carModel.nbCarsLeft)
-            .query('insert into [coastBusters].[dbo].CarModels (Name,Manufacturer,Country,Year,BHP,EngineType,Torque,Emissions,NbOfSeats,NbCarsLeft) values(@name,@manufacturer,@country,@year,@bhp,@engineType,@torque,@emissions,@nbOfSeats,@nbCarsLeft)');
+            .query('insert into [Coast Busters].[dbo].CarModels (Name,Manufacturer,Country,Year,BHP,EngineType,Torque,Emissions,NbOfSeats,NbCarsLeft) values(@name,@manufacturer,@country,@year,@bhp,@engineType,@torque,@emissions,@nbOfSeats,@nbCarsLeft)');
         if (result.rowsAffected === 0) {
             console.log('no rows were affected by inserting a car model');
             return -1;
@@ -261,14 +254,13 @@ module.exports.insertNewCarModel = insertNewCarModel;
 //Edit a Car Model
 const editCarModel = async function (carModel) {
     const config = {
-        user: 'rayhaddad_SQLLogin_1',
-        password: '4fggbv3oxi',
-        server: 'coastBusters.mssql.somee.com',
-
+        user: 'ray',
+        password: '1234',
+        server: 'localhost',
         options: {
             trustServerCertificate: true
         },
-        database: 'coastBusters'
+        database: 'Coast Busters'
     };
     try {
         let pool = await mssql.connect(config)
@@ -284,7 +276,7 @@ const editCarModel = async function (carModel) {
             .input('emissions', mssql.Int, carModel.emissions)
             .input('nbOfSeats', mssql.Int, carModel.nbOfSeats)
             .input('nbCarsLeft', mssql.Int, carModel.nbCarsLeft)
-            .query('update [coastBusters].[dbo].CarModels set Name=@name,Manufacturer=@manufacturer,Country=@country,Year=@year,BHP=@bhp,EngineType=@engineType,Torque=@torque,Emissions=@emissions,NbOfSeats=@nbOfSeats,NbCarsLeft=@nbCarsLeft where CarModelID=@carModelID');
+            .query('update [Coast Busters].[dbo].CarModels set Name=@name,Manufacturer=@manufacturer,Country=@country,Year=@year,BHP=@bhp,EngineType=@engineType,Torque=@torque,Emissions=@emissions,NbOfSeats=@nbOfSeats,NbCarsLeft=@nbCarsLeft where CarModelID=@carModelID');
         if (result.rowsAffected === 0) {
             console.log('no rows were affected by inserting a car model');
 
@@ -305,7 +297,7 @@ const deleteOneCarModel = async function (carModelID) {
 
     try {
         await connectToDB();
-        const result = await mssql.query(`delete from [coastBusters].[dbo].[CarModels] where CarModelID= ${parseInt(carModelID)}`)
+        const result = await mssql.query(`delete from [Coast Busters].[dbo].[CarModels] where CarModelID= ${parseInt(carModelID)}`)
         if (result.rowsAffected === 0) {
             console.log('no rows were affected by deleting a car model');
 

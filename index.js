@@ -14,16 +14,6 @@ let isLoggedIn = false;
 let currentLoggedInUser;
 let currentLoggedInUserPersonInfo;
 let currentLoggedInUseSubscription;
-//Setting up MS SQL
-const config = {
-    user: 'ray',
-    password: '1234',
-    server: 'localhost',
-    options: {
-        trustServerCertificate: true
-    },
-    database: 'Coast Busters'
-}
 
 
 //Accepting html form posts
