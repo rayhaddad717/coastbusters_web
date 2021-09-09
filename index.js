@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const port = 3000;
+let port = 3000;
 const mssql = require('mssql')
 
 const methodOverride = require('method-override');
@@ -206,6 +206,6 @@ app.use(() => {
 })
 
 //Start Listening
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`)
-})
+app.listen(process.env.PORT || 5000, () => {
+    console.log(`Listening on port . It works`)
+});
