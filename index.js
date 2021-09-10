@@ -6,38 +6,64 @@ const methodOverride = require('method-override');
 const carRoutes = require('./routes/cars');
 const accRoutes = require('./routes/accounts');
 const usersRoutes = require('./routes/users');
-app.use(methodOverride('_method'));
-
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const flash = require('connect-flash')
 const dbObjects = require('./utils/dbObjects')
 const dbFunctions = require('./utils/dbFunctions');
 const { render } = require('ejs');
-const AppError = require('./utils/appError')
-let isLoggedIn = false;
-let currentLoggedInUser;
-let currentLoggedInUserPersonInfo;
-let currentLoggedInUseSubscription;
+const AppError = require('./utils/appError');
 
 app.engine('ejs', ejsMate);
-//Accepting html form posts
-app.use(express.urlencoded({ extended: true }))
 //Setting up express to use ejs
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+//Accepting html form posts
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser('thisismysecret'));
+//setting up the options for the session
+const sessionConfig = {
+    resave: false,
+    saveUninitialized: false,
+    secret: 'thisismysecret',
+    cookie: {
+        maxAge: 1000 * 60 * 20
+    }
+}
+app.use(session(sessionConfig));
+app.use(methodOverride('_method'));
 //Adding static files
 app.use(express.static('public'));
+
+app.use(flash());
 app.set('public', path.join(__dirname), 'public')
 
+
+
+//middleware to initialize the variable isLoggedIn in the session to false
+app.use((req, res, next) => {
+    if (!req.session.isLoggedIn) {
+        req.session.isLoggedIn = false;
+    }
+    res.locals.isLoggedIn = req.session.isLoggedIn;
+    if (req.session.personID) {
+        res.locals.personID = req.session.personID
+        res.locals.loginID = req.session.loginID
+    }
+    res.locals.messages = req.flash('success');
+    next();
+})
 //Seting up RESTful routes
 app.use('/cars', carRoutes);
 app.use('/accounts', accRoutes)
 app.use('/users', usersRoutes);
 //Home
 app.get('/', async (req, res) => {
-    if (isLoggedIn) {
-        currentLoggedInUserPersonInfo = await dbFunctions.getPersonInfo(currentLoggedInUser);
-    }
-    res.render('home', { isLoggedIn, currentLoggedInUserPersonInfo });
+    // if (isLoggedIn) {
+    //     currentLoggedInUserPersonInfo = await dbFunctions.getPersonInfo(currentLoggedInUser);
+    // }
+    res.render('home');
 })
 
 
@@ -79,7 +105,7 @@ app.get('/search', async (req, res) => {
         delete car.NbCarsLeft;
 
     })
-    res.render('cars/cars', { isLoggedIn, cars })
+    res.render('cars/show', { cars })
 })
 
 

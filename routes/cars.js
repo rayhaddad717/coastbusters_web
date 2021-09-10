@@ -69,6 +69,7 @@ router.post('/', validateCar, catchAsync(async (req, res) => {
     const carModel = new dbObjects.CarModel({ ...req.body })
     const carModelID = dbFunctions.insertNewCarModel(carModel);
     console.log(carModelID);
+    req.flash('success', 'successfully added a new car')
     setTimeout(() => res.redirect('/cars'), 500);
 }))
 //Get One Car

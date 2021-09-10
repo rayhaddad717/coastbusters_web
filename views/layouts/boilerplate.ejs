@@ -11,10 +11,11 @@
 
 <body class="d-flex flex-column vh-100">
     <%- include('../partials/navbar') %>
-        <%- body %>
+        <%- include('../partials/flash') %>
+            <%- body %>
 
-            <%- include('../partials/footer') %>
-                <script src="/js/validateForms.js"></script>
+                <%- include('../partials/footer') %>
+                    <script src="/js/validateForms.js"></script>
 </body>
 
 </html>

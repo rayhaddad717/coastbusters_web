@@ -121,7 +121,8 @@ const insertNewLoginUsingPersonInfo = async function (info) {
             .query('insert into [coastBusters].[dbo].LoginCredentials (PersonID,Password,isCustomer) values(@personID,@password,@isCustomer)');
         const idResult = await mssql.query(`SELECT IDENT_CURRENT ('LoginCredentials') as id `)
         const loginID = idResult.recordset[0].id;
-        const newLogin = new dbObjects.LoginCredentialObject(loginID, personID, info.isCustomer);
+        const { isCustomer } = info;
+        const newLogin = new dbObjects.LoginCredentialObject({ loginID, PersonID: personID, isCustomer });
         return [newLogin, person, subscription];
 
     } catch (e) { console.log('login', e) }
@@ -163,8 +164,9 @@ const insertNewPerson = async function (info) {
         }
         else {
             const idResult = await mssql.query(`SELECT IDENT_CURRENT ('People') as id `)
-            const personID = idResult.recordset[0].id;
-            const newPerson = new dbObjects.PersonObject(personID, info.FN, info.LN, info.DOB, info.address, info.subscriptionID, info.isCustomer);
+            const { FN: FirstName, LN: LastName, DOB, address: Address, subscriptionID: SubscriptionID, isCustomer } = info;
+            const PersonID = idResult.recordset[0].id;
+            const newPerson = new dbObjects.PersonObject({ PersonID, FirstName, LastName, DOB, Address, SubscriptionID, isCustomer });
             return newPerson;
         }
     } catch (e) { console.log(e); }

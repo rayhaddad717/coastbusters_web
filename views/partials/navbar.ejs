@@ -20,23 +20,31 @@
                 <li class="nav-item">
                     <a class="nav-link " href="/users">Users</a>
                 </li>
+                <% if(isLoggedIn) {%>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/users/<%=personID%>">MyProfile</a>
+                    </li>
+                    <%} %>
             </ul>
             <form class="d-flex" method="GET" action="/search">
                 <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <!-- <%// if(!isLoggedIn){ %> -->
-            <form action="/accounts/login" method="GET">
-                <button type="submit" class="btn btn-success ms-1">LOGIN</button>
-            </form>
-            <form action="/accounts/signup" method="GET">
-                <button type="submit" class="btn btn-danger ms-1">SIGNUP</button>
-            </form>
-            <!-- <%// }else{ %>
-                    <form action="/logout" method="GET">
-                        <button type="submit" class="btn btn-success ms-1">LOGOUT</button>
+            <% if(isLoggedIn ){ %>
+                <form action="/accounts/logout" method="GET">
+                    <button type="submit" class="btn btn-success ms-1">LOGOUT</button>
+                </form>
+
+                <% }else{ %>
+
+
+                    <form action="/accounts/login" method="GET">
+                        <button type="submit" class="btn btn-success ms-1">LOGIN</button>
                     </form>
-                    <%// } %> -->
+                    <form action="/accounts/signup" method="GET">
+                        <button type="submit" class="btn btn-danger ms-1">SIGNUP</button>
+                    </form>
+                    <% } %>
         </div>
     </div>
 </nav>
