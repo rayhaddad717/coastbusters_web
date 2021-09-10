@@ -7,6 +7,7 @@
                     <th>Person ID</th>
                     <th>isCustomer</th>
                     <th>Password</th>
+                    <th>View User</th>
 
                 </tr>
             </thead>
@@ -20,7 +21,7 @@
                                     <%=i %>
                                 </td>
                                 <% } %>
-
+                                    <td><a class="btn btn-primary" href="/users/<%=personID  %> ">View User</a></td>
                 </tr>
                 <% } %>
         </table>
