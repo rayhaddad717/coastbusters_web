@@ -41,7 +41,7 @@
 
             <div class=" row mt-2">
                 <label class="col form-label" for="Year">Year</label>
-                <input required class="col form-control" type="number" name="Year" id="Year">
+                <input required class="col form-control" type="number" name="Year" min="1899" id="Year">
                 <div class="offset-6 valid-feedback">
                     Looks good!
                 </div>
@@ -53,7 +53,7 @@
 
             <div class=" row mt-2">
                 <label class="col form-label" for="BHP">BHP</label>
-                <input required class="col form-control" type="number" name="BHP" id="BHP">
+                <input required class="col form-control" type="number" min="0" name="BHP" id="BHP">
                 <div class="offset-6 valid-feedback">
                     Looks good!
                 </div>
@@ -101,19 +101,19 @@
 
             <div class=" row mt-2">
                 <label class="col form-label" for="emissions">emissions</label>
-                <input required class="col form-control" type="number" name="Emissions" id="emissions">
+                <input required class="col form-control" type="number" name="Emissions" min="0" id="emissions">
                 <div class="offset-6 valid-feedback">
                     Looks good!
                 </div>
                 <div class="offset-6 invalid-feedback">
-                    Please enter a valid Emissins value!
+                    Please enter a valid Emissions value!
                 </div>
 
             </div>
 
             <div class=" row mt-2">
                 <label class="col form-label" for="torque">torque</label>
-                <input required class="col form-control" type=" number" name="Torque" id="torque">
+                <input required class="col form-control" type=" number" name="Torque" id="torque" min="0">
                 <div class="offset-6 valid-feedback">
                     Looks good!
                 </div>

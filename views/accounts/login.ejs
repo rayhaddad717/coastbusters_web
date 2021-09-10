@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate') %>
+    <form action="/accounts/login" class="needs-validation" novalidate method="GET">
+        <label for="loginID"></label>
+        <input type="number" name="loginID" id="loginID" placeholder="loginID" required min="0">
+        <label for="password"></label>
+        <input type="password" name="password" id="password" placeholder="password" required minlength="4">
+        <button class="btn btn-primary">LOGIN</button>
+    </form>
+    <script src="/js/script.js"></script>
+    <script src="/js/validateForms.js"></script>
+
+    </body>
+
+    </html>

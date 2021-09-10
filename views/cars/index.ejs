@@ -1,0 +1,56 @@
+<% layout ('layouts/boilerplate')%>
+    <!-- <%//if(isLoggedIn) {%> -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Manufacturer</th>
+                <th>Year</th>
+                <th>BHP</th>
+                <th class="text-center" colspan="3">Buttons</th>
+            </tr>
+        </thead>
+        <% for(let car of cars) {%>
+            <tr>
+                <% const {name,manufacturer,year,bhp,carModelID}=car; %>
+                    <td>
+                        <%=name %>
+                    </td>
+                    <td>
+                        <%=manufacturer %>
+                    </td>
+                    <td>
+                        <%=year %>
+                    </td>
+                    <td>
+                        <%=bhp %>
+                    </td>
+                    <td>
+                        <form action="/cars/<%=car.carModelID%>">
+                            <button class="btn btn-primary">View</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/cars/<%=car.carModelID%>/edit" method="get">
+                            <button class="btn btn-success">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/cars/<%=car.carModelID%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger col-md">Delete</button>
+                        </form>
+                    </td>
+
+            </tr>
+            <%} %>
+    </table>
+    <form action="/cars/new" method="GET">
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">ADD A NEW CAR</button>
+
+        </div>
+    </form>
+    <!-- <%//}else{ %>
+            <h1>You are not logged in.</h1>
+            <h2>Log in or create a new account</h2>
+            <% //} %> -->

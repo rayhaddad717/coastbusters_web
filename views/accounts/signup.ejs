@@ -1,0 +1,95 @@
+<% layout('layouts/boilerplate') %>
+
+    <form action="/accounts/signup" class="needs-validation" method="POST" novalidate>
+        <div class="container-fluid mt-5">
+            <div class="row">
+                <label class="col form-label" for="FN">First Name:</label>
+                <input class="col form-control" required type="text" name="FN" id="FN" placeholder="first name">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid First Name!
+                </div>
+            </div>
+            <div class="row mt-2">
+                <label class="col form-label" for="LN">Last Name:</label>
+                <input class="col form-control" required type="text" name="LN" id="LN" placeholder="last name">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Last Name!
+                </div>
+            </div>
+            <div class="row mt-2">
+                <label class="col form-label" for="DOB">Date of Birth:</label>
+                <input class="col form-control" required type="date" name="DOB" id="DOB" placeholder="data of birth">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Date of Birth!
+                </div>
+            </div>
+            <div class="row mt-2">
+                <label class="col form-label" for="address">Address:</label>
+                <input class="col form-control" required type="text" name="address" id="address" placeholder="Address">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Address!
+                </div>
+            </div>
+            <div class="row mt-5" id="subscriptionTypeContainer">
+                <label for="subType" class="form-label col-12">Subscription Type:</label>
+                <select class="form-select col-6" id="subscriptionTypeSelect" name="subscriptionTypeSelect" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option value="1">Silver</option>
+                    <option value="2">Gold</option>
+                    <option value="3">Platinum</option>
+                    <option value="4">Employee</option>
+                </select>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Number of Allowed Cars</th>
+                            <th>Cost</th>
+                        </tr>
+                    <tbody>
+                        <tr id="subsRowValues">
+                            <td id="allowedCars">0</td>
+                            <td id="cost">0</td>
+                        </tr>
+                    </tbody>
+                    </thead>
+                </table>
+            </div>
+            <div class="row mt-2">
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="personType" id="customer" autocomplete="off" checked
+                        value="customer">
+                    <label class="btn btn-outline-primary" for="customer">Customer</label>
+
+                    <input value="staff" type="radio" class="btn-check" name="personType" id="staff" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="staff">Staff Member</label>
+
+                </div>
+            </div>
+            <div class="row mt-2">
+                <label class="form-label" for="password">Enter A Password</label>
+                <input class="form-control" type="password" name="password" placeholder="password" id="password"
+                    minlength="4" required>
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid password!
+                </div>
+            </div>
+            <button class="btn btn-primary">SIGNUP</button>
+        </div>
+    </form>
+    <script src="/js/signupScript.js"></script>
+    <script src="/js/validateForms"></script>

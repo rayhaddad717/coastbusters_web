@@ -4,10 +4,12 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const carRoutes = require('./routes/cars');
+const accRoutes = require('./routes/accounts');
+const usersRoutes = require('./routes/users');
 app.use(methodOverride('_method'));
 
-const dbObjects = require('./dbObjects')
-const dbFunctions = require('./dbFunctions');
+const dbObjects = require('./utils/dbObjects')
+const dbFunctions = require('./utils/dbFunctions');
 const { render } = require('ejs');
 const AppError = require('./utils/appError')
 let isLoggedIn = false;
@@ -28,6 +30,8 @@ app.set('public', path.join(__dirname), 'public')
 
 //Seting up RESTful routes
 app.use('/cars', carRoutes);
+app.use('/accounts', accRoutes)
+app.use('/users', usersRoutes);
 //Home
 app.get('/', async (req, res) => {
     if (isLoggedIn) {
@@ -36,53 +40,6 @@ app.get('/', async (req, res) => {
     res.render('home', { isLoggedIn, currentLoggedInUserPersonInfo });
 })
 
-
-//Login
-app.get('/login', async (req, res) => {
-    const queryString = req.query;
-    //If the query string is empty it means i want the login page 
-    if (Object.getOwnPropertyNames(queryString).length === 0) {
-        res.render('login');
-    }
-    //else the query string has the loginid and password to login
-    else {
-        const { loginID, password } = queryString;
-        const isCorrectPassword = await dbFunctions.checkLogin(loginID, password);
-        if (isCorrectPassword) {
-            isLoggedIn = true;
-            currentLoggedInUser = await dbFunctions.getLoginCredentialsInfo(loginID);
-            res.redirect('/')
-        }
-        else { res.send('Invalid username/password') }
-    }
-
-})
-
-//Logout
-app.get('/logout', (req, res) => {
-    isLoggedIn = false;
-    currentLoggedInUser = undefined;
-    currentLoggedInUserPersonInfo = undefined;
-    currentLoggedInUseSubscription = undefined;
-    res.redirect('/');
-}
-)
-
-//Signup
-app.get('/signup', async (req, res) => {
-    res.render('signup')
-})
-app.post('/signup', async (req, res) => {
-
-    const { FN, LN, DOB, address, personType, subscriptionTypeSelect, password } = req.body;
-    const isCustomer = (personType === "customer" ? true : false);
-    const info = { FN, LN, DOB, address, isCustomer, subscriptionTypeSelect, password };
-    console.log(info);
-    const result = await dbFunctions.insertNewLoginUsingPersonInfo(info);
-    [currentLoggedInUser, currentLoggedInUserPersonInfo, currentLoggedInUseSubscription] = result;
-    isLoggedIn = true;
-    res.redirect('/')
-})
 
 //Search
 app.get('/search', async (req, res) => {
@@ -122,17 +79,12 @@ app.get('/search', async (req, res) => {
         delete car.NbCarsLeft;
 
     })
-    console.log(cars)
-    res.render('cars', { isLoggedIn, cars })
+    res.render('cars/cars', { isLoggedIn, cars })
 })
 
 
 
-app.get('/users', async (req, res) => {
 
-    const logins = await dbFunctions.getAllLogins();
-    res.render('users/users', { logins })
-})
 
 app.all('*', (req, res, next) => {
     next(new AppError('The page that you requested cannot be found. :(', 404))

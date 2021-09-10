@@ -37,19 +37,19 @@ module.exports.search = search;
 getLoginCredentialsInfo = async function (loginID) {
     await connectToDB();
     const info = await mssql.query(`select * from [coastBusters].[dbo].[LoginCredentials] where loginID=${loginID}`)
-    const { Password, isCustomer, PersonID } = info.recordset[0];
-    return new dbObjects.LoginCredentialObject(loginID, PersonID, isCustomer)
+    const { isCustomer, PersonID } = info.recordset[0];
+    return new dbObjects.LoginCredentialObject({ loginID, PersonID, isCustomer })
 }
 module.exports.getLoginCredentialsInfo = getLoginCredentialsInfo;
 
 //Function to get the logged in user Person information
-getPersonInfo = async function (currentLoggedInUser) {
+getPersonInfo = async function (personID) {
     try {
         await connectToDB();
-        const info = await mssql.query(`select * from [coastBusters].[dbo].[People] where personID=${currentLoggedInUser.personID}`)
+        const info = await mssql.query(`select * from [coastBusters].[dbo].[People] where personID=${personID}`)
         const { FirstName, LastName, DateOfBirth, Address, SubscriptionID, IsACustomer: isCustomer, PersonID } = info.recordset[0];
 
-        const person = new dbObjects.PersonObject(PersonID, FirstName, LastName, DateOfBirth, Address, SubscriptionID, isCustomer);
+        const person = new dbObjects.PersonObject({ PersonID, FirstName, LastName, DateOfBirth, Address, SubscriptionID, isCustomer });
         if (isCustomer) {
             const { AccidentsMade, NbOfRentedCars } = info.recordset[0];
             person.addCustomerInfo(AccidentsMade, NbOfRentedCars);
@@ -321,7 +321,7 @@ module.exports.deleteOneCarModel = deleteOneCarModel;
 
 
 //Get all people
-//Will return an array filled with CarModelObjects
+//Will return an array filled with Logins
 const getAllLogins = async function () {
     try {
         await connectToDB();
@@ -329,7 +329,7 @@ const getAllLogins = async function () {
         logins = logins.recordset;
         const loginsArray = [];
         for (let login of logins) {
-            const newLogin = new dbObjects.LoginCredentialObject2({ ...login });
+            const newLogin = new dbObjects.LoginCredentialObject({ ...login });
             loginsArray.push(newLogin);
         }
         return loginsArray;

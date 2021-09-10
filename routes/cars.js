@@ -1,12 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const dbObjects = require('../dbObjects')
-const dbFunctions = require('../dbFunctions');
+const dbObjects = require('../utils/dbObjects')
+const dbFunctions = require('../utils/dbFunctions');
 const catchAsync = require('../utils/catchAsync');
+const { carSchema } = require('../utils/schemas');
+const AppError = require('../utils/appError');
 //middleware test
 const checkLogin = (req, res, next) => {
     if (true) {
         console.log('entered middleware')
+        next();
+    }
+}
+
+//middleware joi validation
+const validateCar = (req, res, next) => {
+    const { error } = carSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new AppError(error.message, '400');
+    }
+    else {
         next();
     }
 }
@@ -47,11 +61,11 @@ router.get('/', checkLogin, catchAsync(async (req, res) => {
     // }
     const cars = await dbFunctions.getAllCars();
     // res.render('cars/cars', { cars, isLoggedIn });
-    res.render('cars/cars', { cars });
+    res.render('cars/index', { cars });
 }))
 
 //Post a new car
-router.post('/', catchAsync(async (req, res) => {
+router.post('/', validateCar, catchAsync(async (req, res) => {
     const carModel = new dbObjects.CarModel({ ...req.body })
     const carModelID = dbFunctions.insertNewCarModel(carModel);
     console.log(carModelID);
@@ -63,7 +77,7 @@ router.get('/:id', catchAsync(async (req, res) => {
     const car = await dbFunctions.getOneCar(req.params.id);
     const cars = [car];
     // res.render('cars', { cars, isLoggedIn });
-    res.render('cars/cars', { cars });
+    res.render('cars/show', { cars });
     // }
     // else {
     //     res.render('nopermission', { isLoggedIn })
@@ -77,7 +91,7 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
 
 }))
 
-router.patch('/:id', catchAsync(async (req, res) => {
+router.patch('/:id', validateCar, catchAsync(async (req, res) => {
     const editedCar = new dbObjects.CarModel({ ...req.body })
     await dbFunctions.editCarModel(editedCar);
     setTimeout(() => { res.redirect('/cars') }, 500)

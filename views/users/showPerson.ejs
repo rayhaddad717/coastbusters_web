@@ -1,0 +1,53 @@
+<% layout('layouts/boilerplate') %>
+    <table class="table mt-3">
+        <% const {personID,firstName,lastName,dateOfBirth,address,isCustomer,subscriptionID}=person; %>
+            <thead>
+                <tr>
+                    <th class="text-center" colspan="2">Your Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row">
+                    <th class="col-5 offset-1">Person ID</th>
+                    <td class="col-5">
+                        <%=personID %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-5 offset-1">First Name</th>
+                    <td class="col-5">
+                        <%=firstName %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-5 offset-1">Last Name</th>
+                    <td class="col-5">
+                        <%=lastName %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-5 offset-1">Date of Birth</th>
+                    <td class="col-5">
+                        <%=dateOfBirth %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-5 offset-1">Address</th>
+                    <td class="col-5">
+                        <%=address %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-5 offset-1">isCustomer</th>
+                    <td class="col-5">
+                        <%=isCustomer %>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <th class="col-5 offset-1">Subsciption ID</th>
+                    <td class="col-5">
+                        <%=subscriptionID %>
+                    </td>
+                </tr>
+            </tbody>
+    </table>

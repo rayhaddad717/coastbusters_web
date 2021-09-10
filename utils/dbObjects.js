@@ -1,21 +1,10 @@
-module.exports.LoginCredentialObject = class LoginCredentialObject {
-    constructor(loginID, personID, isCustomer, password = "") {
-        this.personID = personID;
-        this.isCustomer = isCustomer;
-        this.loginID = loginID;
-        this.password = password;
-    }
-    print() {
-        console.log(this.loginID, this.password, this.personID, this.isCustomer)
-    }
-};
 //this class is only to get all users
-module.exports.LoginCredentialObject2 = class LoginCredentialObject2 {
+module.exports.LoginCredentialObject = class LoginCredentialObject {
     constructor(login) {
         this.personID = login.PersonID;
         this.isCustomer = login.isCustomer;
         this.loginID = login.loginID;
-        this.password = login.Password;
+        this.password = login.Password ? login.Password : "";
     }
     print() {
         console.log(this.loginID, this.password, this.personID, this.isCustomer)
@@ -23,14 +12,14 @@ module.exports.LoginCredentialObject2 = class LoginCredentialObject2 {
 };
 
 module.exports.PersonObject = class PersonObject {
-    constructor(personID, FN, LN, DOB, address, subscriptionID, isCustomer) {
-        this.personID = personID;
-        this.firstName = FN;
-        this.lastName = LN;
-        this.dateOfBirth = DOB;
-        this.address = address;
-        this.isCustomer = isCustomer;
-        this.subscriptionID = subscriptionID;
+    constructor(person) {
+        this.personID = person.PersonID;
+        this.firstName = person.FirstName;
+        this.lastName = person.LastName;
+        this.dateOfBirth = person.DOB;
+        this.address = person.Address;
+        this.isCustomer = person.isCustomer;
+        this.subscriptionID = person.SubscriptionID;
     };
     addCustomerInfo(accidentsMade, nbOfRentedCars) {
         this.accidentsMade = accidentsMade;
