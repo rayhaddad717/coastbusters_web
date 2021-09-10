@@ -317,3 +317,22 @@ const deleteOneCarModel = async function (carModelID) {
     } catch (e) { console.log(e); }
 }
 module.exports.deleteOneCarModel = deleteOneCarModel;
+
+
+
+//Get all people
+//Will return an array filled with CarModelObjects
+const getAllLogins = async function () {
+    try {
+        await connectToDB();
+        let logins = await mssql.query('select * from [coastBusters].[dbo].LoginCredentials');
+        logins = logins.recordset;
+        const loginsArray = [];
+        for (let login of logins) {
+            const newLogin = new dbObjects.LoginCredentialObject2({ ...login });
+            loginsArray.push(newLogin);
+        }
+        return loginsArray;
+    } catch (e) { console.log(e, 'error in reading all cars') }
+}
+module.exports.getAllLogins = getAllLogins;

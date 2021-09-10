@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate') %>
+    <% //if(isLoggedIn) {%>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Login ID</th>
+                    <th>Person ID</th>
+                    <th>isCustomer</th>
+                    <th>Password</th>
+
+                </tr>
+            </thead>
+            <% for(let login of logins) {%>
+                <tr>
+                    <% const {loginID, personID, isCustomer, password}=login; %>
+                        <% const info=[loginID, personID, isCustomer, password]; %>
+                            <% for(let i of info) {%>
+
+                                <td>
+                                    <%=i %>
+                                </td>
+                                <% } %>
+
+                </tr>
+                <% } %>
+        </table>

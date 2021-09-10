@@ -1,0 +1,130 @@
+<% layout ('layouts/boilerplate')%>
+
+    <h1>Kindly Fill the below information to add a new car to our garage</h1>
+    <form class="d-inline needs-validation" action="/cars" method="POST" novalidate>
+        <div class="container-fluid">
+            <div class=" row mt-2">
+                <label class="col form-label" for="name">Car Name</label>
+                <input required class="col form-control" type="text" name="Name" id="name">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid car Name!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="manufacturer">Car Manufacturer</label>
+                <input required class="col form-control" type="text" name="Manufacturer" id="manufacturer">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class=" offset-6 invalid-feedback">
+                    Please enter a valid Car Manufacturer!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="country">Country</label>
+                <input required class="col form-control" type="text" name="Country" id="country">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Country!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="Year">Year</label>
+                <input required class="col form-control" type="number" name="Year" id="Year">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Year!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="BHP">BHP</label>
+                <input required class="col form-control" type="number" name="BHP" id="BHP">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid BHP value!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="nbOfSeats">Number of Seats</label>
+                <input required class="col form-control" type="number" name="NbOfSeats" id="nbOfSeats">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Number of Seats Value!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="nbCarsLeft">nbCarsLeft</label>
+                <input required class="col form-control" type="number" name="NbCarsLeft" id="nbCarsLeft">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Number of Cars Left value!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="Engine Type">Engine Type</label>
+                <input required class="col form-control" type="text" name="EngineType" id="Engine Type">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Engine Type Value!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="emissions">emissions</label>
+                <input required class="col form-control" type="number" name="Emissions" id="emissions">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Emissins value!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="torque">torque</label>
+                <input required class="col form-control" type=" number" name="Torque" id="torque">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid Torque Value!
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit Data</button>
+        <button class="btn btn-success" type="reset">Undo All Changes</button>
+    </form>
+    <form class="d-inline" action="/cars" method="GET">
+        <button class="btn btn-danger" type="submit">Cancel</button>
+    </form>

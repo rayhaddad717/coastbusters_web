@@ -1,21 +1,21 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-let port = 3000;
-const mssql = require('mssql')
-
+const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
+const carRoutes = require('./routes/cars');
 app.use(methodOverride('_method'));
 
 const dbObjects = require('./dbObjects')
-const dbFunctions = require('./dbFunctions')
-
+const dbFunctions = require('./dbFunctions');
+const { render } = require('ejs');
+const AppError = require('./utils/appError')
 let isLoggedIn = false;
 let currentLoggedInUser;
 let currentLoggedInUserPersonInfo;
 let currentLoggedInUseSubscription;
 
-
+app.engine('ejs', ejsMate);
 //Accepting html form posts
 app.use(express.urlencoded({ extended: true }))
 //Setting up express to use ejs
@@ -27,7 +27,7 @@ app.use(express.static('public'));
 app.set('public', path.join(__dirname), 'public')
 
 //Seting up RESTful routes
-
+app.use('/cars', carRoutes);
 //Home
 app.get('/', async (req, res) => {
     if (isLoggedIn) {
@@ -126,86 +126,25 @@ app.get('/search', async (req, res) => {
     res.render('cars', { isLoggedIn, cars })
 })
 
-//Customer
-app.get('/mycars', async (req, res) => {
-    if (isLoggedIn) {
-        const cars = await dbFunctions.getRentedCarsByPerson(currentLoggedInUserPersonInfo.personID)
-        const carsArray = cars.recordset;
-        res.render('mycars', { carsArray, isLoggedIn });
-    } else res.render('mycars', { isLoggedIn });
+
+
+app.get('/users', async (req, res) => {
+
+    const logins = await dbFunctions.getAllLogins();
+    res.render('users/users', { logins })
 })
 
-
-//Employee
-//Add a new car
-app.get('/cars/new', async (req, res) => {
-    if (isLoggedIn && currentLoggedInUser.isCustomer === false) {
-        console.log('employee can login')
-        res.render('newCar', { isLoggedIn })
-    }
-    else {
-        res.render('nopermission', { isLoggedIn })
-    }
-})
-//Post a new car
-app.post('/cars', async (req, res) => {
-    const carModel = new dbObjects.CarModel({ ...req.body })
-    const carModelID = dbFunctions.insertNewCarModel(carModel);
-    console.log(carModelID);
-    setTimeout(() => res.redirect('/cars'), 500);
-})
-//Edit One Car
-app.get('/cars/:id/edit', async (req, res) => {
-    const car = await dbFunctions.getOneCar(req.params.id);
-    res.render('editCar', { car, isLoggedIn })
-
+app.all('*', (req, res, next) => {
+    next(new AppError('The page that you requested cannot be found. :(', 404))
 })
 
-app.patch('/cars/:id', async (req, res) => {
-    const editedCar = new dbObjects.CarModel({ ...req.body })
-    await dbFunctions.editCarModel(editedCar);
-    setTimeout(() => { res.redirect('/cars') }, 500)
+app.use((err, req, res, next) => {
+    const { status = 500, message = 'something went wrong' } = err;
+    res.status(status);
+    res.render('error', { err })
 })
-
-
-//Delete One Car
-app.delete('/cars/:id', async (req, res) => {
-    const carModelID = req.params.id;
-    await dbFunctions.deleteOneCarModel(carModelID);
-    res.redirect('/cars')
-})
-//Get One Car
-app.get('/cars/:id', async (req, res) => {
-    if (isLoggedIn && currentLoggedInUser.isCustomer === false) {
-        const car = await dbFunctions.getOneCar(req.params.id);
-        const cars = [car];
-        res.render('cars', { cars, isLoggedIn });
-    }
-    else {
-        res.render('nopermission', { isLoggedIn })
-    }
-})
-
-//Get All Cars
-app.get('/cars', async (req, res) => {
-    if (isLoggedIn && currentLoggedInUser.isCustomer === false) {
-        console.log('employee can login')
-        const cars = await dbFunctions.getAllCars();
-        res.render('cars', { cars, isLoggedIn });
-    }
-    else {
-        res.render('nopermission', { isLoggedIn })
-    }
-})
-
-
-
-//Monitor Requests
-app.use(() => {
-    // console.log('got a request')
-})
-
 //Start Listening
-app.listen(process.env.PORT || 5000, () => {
-    console.log(`Listening on port . It works`)
+const port = process.env.Port ? process.env.port : 3000;
+app.listen(port, () => {
+    console.log(`Listening on port ${port}. It works`)
 });

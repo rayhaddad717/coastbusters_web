@@ -11,29 +11,32 @@
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/mycars">My Cars</a>
+                    <a class="nav-link" href="/cars/mycars">My Cars</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link " href="/cars">Cars</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/users">Users</a>
                 </li>
             </ul>
             <form class="d-flex" method="GET" action="/search">
                 <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <% if(!isLoggedIn){ %>
-                <form action="/login" method="GET">
-                    <button type="submit" class="btn btn-success ms-1">LOGIN</button>
-                </form>
-                <form action="/signup" method="GET">
-                    <button type="submit" class="btn btn-danger ms-1">SIGNUP</button>
-                </form>
-                <% }else{ %>
+            <!-- <%// if(!isLoggedIn){ %> -->
+            <form action="/login" method="GET">
+                <button type="submit" class="btn btn-success ms-1">LOGIN</button>
+            </form>
+            <form action="/signup" method="GET">
+                <button type="submit" class="btn btn-danger ms-1">SIGNUP</button>
+            </form>
+            <!-- <%// }else{ %>
                     <form action="/logout" method="GET">
                         <button type="submit" class="btn btn-success ms-1">LOGOUT</button>
                     </form>
-                    <% } %>
+                    <%// } %> -->
         </div>
     </div>
 </nav>

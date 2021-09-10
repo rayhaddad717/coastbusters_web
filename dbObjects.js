@@ -9,6 +9,19 @@ module.exports.LoginCredentialObject = class LoginCredentialObject {
         console.log(this.loginID, this.password, this.personID, this.isCustomer)
     }
 };
+//this class is only to get all users
+module.exports.LoginCredentialObject2 = class LoginCredentialObject2 {
+    constructor(login) {
+        this.personID = login.PersonID;
+        this.isCustomer = login.isCustomer;
+        this.loginID = login.loginID;
+        this.password = login.Password;
+    }
+    print() {
+        console.log(this.loginID, this.password, this.personID, this.isCustomer)
+    }
+};
+
 module.exports.PersonObject = class PersonObject {
     constructor(personID, FN, LN, DOB, address, subscriptionID, isCustomer) {
         this.personID = personID;
