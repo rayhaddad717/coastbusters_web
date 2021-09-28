@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
-    <form action="/accounts/login" class="needs-validation" novalidate method="GET">
-        <label for="loginID"></label>
-        <input type="number" name="loginID" id="loginID" placeholder="loginID" required min="0">
+    <form action="/accounts/login" class="needs-validation" novalidate method="POST">
+        <label for="username"></label>
+        <input type="text" name="username" id="loginID" placeholder="username" required min="0">
         <label for="password"></label>
         <input type="password" name="password" id="password" placeholder="password" required minlength="4">
         <button class="btn btn-primary">LOGIN</button>

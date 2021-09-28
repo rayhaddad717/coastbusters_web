@@ -1,0 +1,50 @@
+{
+  "_from": "express-sanitize",
+  "_id": "express-sanitize@1.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-CKQynhLSlOMnEURfrKoPQdh/+UNeEVKqQsRZ+TzwTzcLnmAu29L98NLabepMyfcTIacYrSNbl+zZDiVR7HOqiA==",
+  "_location": "/express-sanitize",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "express-sanitize",
+    "name": "express-sanitize",
+    "escapedName": "express-sanitize",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/express-sanitize/-/express-sanitize-1.0.1.tgz",
+  "_shasum": "788ffc32ab43f6cae8a5b3fcbdb6e82d34c5a864",
+  "_spec": "express-sanitize",
+  "_where": "/home/ray/Desktop/coastbusters_web",
+  "author": {
+    "name": "Amin Bagheri"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A middleware to sanitize all of the request inputs to prevent SQL injections and XSS attacks",
+  "keywords": [
+    "sanitize",
+    "express",
+    "sanitizer",
+    "sanitizer",
+    "sql",
+    "injection",
+    "xss",
+    "attack",
+    "hack"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "express-sanitize",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.1"
+}

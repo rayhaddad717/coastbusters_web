@@ -20,12 +20,14 @@ module.exports.personSchema = Joi.object({
     DOB: Joi.string().required(),
     address: Joi.string().required(),
     password: Joi.string().required(),
+    username:Joi.string().required(),
     subscriptionTypeSelect: Joi.allow(),
     personType: Joi.string()
 
 });
 
 module.exports.loginSchema = Joi.object({
-    loginID: Joi.number().required().min(0),
-    password: Joi.string().required()
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+
 })

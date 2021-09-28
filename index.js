@@ -4,7 +4,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const carRoutes = require('./routes/cars');
-const accRoutes = require('./routes/accounts');
+const accRoutes = require('./routes/accountsv2');
 const usersRoutes = require('./routes/users');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -18,10 +18,10 @@ app.engine('ejs', ejsMate);
 //Setting up express to use ejs
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 //Accepting html form posts
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser('thisismysecret'));
+
 //setting up the options for the session
 const sessionConfig = {
     resave: false,
@@ -34,38 +34,89 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(methodOverride('_method'));
 //Adding static files
+app.set('public', path.join(__dirname), 'public')
 app.use(express.static('public'));
 
 app.use(flash());
-app.set('public', path.join(__dirname), 'public')
+
+
+//passport
+const passport=require('passport');
+const LocalStrategy=require('passport-local');
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use('local-login',new LocalStrategy({
+    usernameField: 'username',
+    passwordField: 'password'
+  },
+  async function(username,password,done){
+      const user=await dbFunctions.checkLogin(username,password);
+    try{
+        console.log(user);
+        if(user===null){
+            return done(null,false);
+        }else{
+            console.log('loggedin')
+        return done(null,user)}
+    }catch(e){
+        console.log(e)
+        return done(e,false)
+    }
+}
+
+  ));
+
+  passport.serializeUser(function(user, done) {
+    done(null, user.loginID);
+  });
+  
+  passport.deserializeUser(async function(id, done) {
+  try{  
+     const user= await dbFunctions.findByID(id);
+    done(null,user)}
+    catch(e){done(e,undefined);}
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 //middleware to initialize the variable isLoggedIn in the session to false
 app.use((req, res, next) => {
-    if (!req.session.isLoggedIn) {
-        req.session.isLoggedIn = false;
-    }
-    res.locals.isLoggedIn = req.session.isLoggedIn;
-    if (req.session.personID) {
-        res.locals.personID = req.session.personID
-        res.locals.loginID = req.session.loginID
-    }
+    res.locals.isLoggedIn=req.isAuthenticated();
     res.locals.messages = req.flash('success');
+    if (req.user) {
+        res.locals.personID = req.user.PersonID;
+        res.locals.loginID = req.user.loginID;
+    }
     next();
 })
-//Seting up RESTful routes
-app.use('/cars', carRoutes);
-app.use('/accounts', accRoutes)
-app.use('/users', usersRoutes);
+const es = require('./utils/express-sanitize/index');
+app.use(es);
+
 //Home
 app.get('/', async (req, res) => {
     // if (isLoggedIn) {
     //     currentLoggedInUserPersonInfo = await dbFunctions.getPersonInfo(currentLoggedInUser);
     // }
-    res.render('home');
+   res.render('home',);
+    
 })
-
+//Seting up RESTful routes
+app.use('/cars', carRoutes);
+app.use('/accounts', accRoutes)
+app.use('/users', usersRoutes);
 
 //Search
 app.get('/search', async (req, res) => {
