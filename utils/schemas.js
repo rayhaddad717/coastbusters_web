@@ -7,11 +7,10 @@ module.exports.carSchema = Joi.object({
     Year: Joi.number().min(1899).required(),
     BHP: Joi.number().min(0).required(),
     NbOfSeats: Joi.number().min(0).required(),
-    NbCarsLeft: Joi.number().min(0).required(),
     EngineType: Joi.string().required(),
     Emissions: Joi.number().min(0).required(),
-    Torque: Joi.number().min(0).required(),
-    image:Joi.string().required()
+    Torque: Joi.number().min(0).required()
+    // image:Joi.string()
 
 
 });

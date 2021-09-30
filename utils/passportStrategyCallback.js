@@ -1,6 +1,7 @@
+const LoginCredential = require('../models/loginCredentials');
 const dbFunctions = require('../utils/dbFunctions');
 module.exports=async function(username,password,done){
-    const user=await dbFunctions.checkLogin(username,password);
+    const user=await LoginCredential.checkLogin(username,password);
   try{
       console.log(user);
       if(user===null){

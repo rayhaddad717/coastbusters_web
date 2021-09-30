@@ -6,7 +6,8 @@ const router = express.Router();
 const dbObjects = require('../utils/dbObjects')
 const dbFunctions = require('../utils/dbFunctions');
 const { personSchema, loginSchema } = require('../utils/schemas');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const LoginCredential = require('../models/loginCredentials');
 //person validation middleware
 const validatePerson = (req, res, next) => {
     const { error } = personSchema.validate(req.body);
@@ -39,7 +40,7 @@ router.get('/login', async (req, res, next) => {
     //else the query string has the loginid and password to login
     else {
         const { loginID, password } = queryString;
-        const isCorrectPassword = await dbFunctions.checkLogin(loginID, password);
+        const isCorrectPassword = await LoginCredential.checkLogin(loginID, password);
         if (isCorrectPassword) {
             isLoggedIn = true;
             const currentLoggedInUser = await dbFunctions.getLoginCredentialsInfo(loginID);

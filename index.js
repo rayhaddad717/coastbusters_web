@@ -71,12 +71,12 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(async function (id, done) {
     try {
-        const user = await dbFunctions.findByID(id);
+        const user = await LoginCredential.findByID(id);
         done(null, user)
     }
     catch (e) { done(e, undefined); }
 });
-
+const Person= require('./models/person');
 //middleware to initialize the variable isLoggedIn in the session to false
 app.use(async (req, res, next) => {
     res.locals.isLoggedIn = req.isAuthenticated();
@@ -88,13 +88,14 @@ app.use(async (req, res, next) => {
         // res.locals.loginID = req.user.loginID;
         // res.locals.isCustomer = req.user.isCustomer;
         res.locals.currentUser = req.user;
-        res.locals.currentPerson= await dbFunctions.getPersonInfo(req.user.PersonID);
+        res.locals.currentPerson= await Person.getPersonInfo(req.user.PersonID);
     }
     next();
 })
 
 //sql sanitizer
 const es = require('./utils/express-sanitize/index');
+const LoginCredential = require('./models/loginCredentials');
 app.use(es);
 
 //Home

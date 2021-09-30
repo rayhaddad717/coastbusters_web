@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const dbFunctions = require('../utils/dbFunctions');
 const middleware= require('../middleware');
 router.use(middleware.isLoggedIn);
 router.get('/', async (req, res) => {
 
-    const logins = await dbFunctions.getAllLogins();
+    const logins = await LoginCredential.getAllLogins();
     res.render('users/users', { logins })
 });
-
+const Person = require('../models/person');
+const LoginCredential = require('../models/loginCredentials');
 router.get('/:id', async (req, res) => {
     if(req.user.isCustomer){
         if(req.params.id!== res.locals.currentPerson.PersonID){
@@ -16,7 +16,7 @@ router.get('/:id', async (req, res) => {
         }
         res.render('users/showPerson',{person:res.locals.currentPerson});
     }else{
-    const person = await dbFunctions.getPersonInfo(req.params.id);
+    const person = await Person.getPersonInfo(req.params.id);
     if(person === null){
         req.flash('warning','cant find user');
         res.redirect('/');

@@ -7,7 +7,7 @@ let maxCarIndex;
 const showCar = (index) => {
     console.log(index)
     try {
-        p.innerText = cars[index].Color;
+        p.innerText = cars[index].Color + cars[index].Condition + cars[index].NeedsRepair;
         i.src = cars[index].image;
     } catch (e) { console.log(e) }
 
@@ -43,33 +43,46 @@ const getCars = async () => {
 };
 
 const initialize = async () => {
+
     cars = await getCars();
     maxCarIndex=cars.length - 1;
+    
     p = document.createElement('p');
     p.classList.add('info');
     i = document.createElement('img');
     i.classList.add('carImg');
     document.querySelector('.carContainer').appendChild(p);
     document.querySelector('.carContainer').appendChild(i);
-    const nextBtn = document.querySelector('.nextBtn');
-    const prevBtn = document.querySelector('.prevBtn');
-    prevBtn.addEventListener('click', showPrevCar);
-    nextBtn.addEventListener('click', showNextCar);
 
-    const rent = document.createElement('button');
-    rent.innerText="Rent";
+    const rentBtn = document.createElement('button');
+    rentBtn.innerText="Rent";
 
-    rent.addEventListener('click',async ()=>{
+    rentBtn.addEventListener('click',async ()=>{
         const rentString = `/cars/rent/${cars[currentCarIndex].CarID}`;
         try{
         const mes=await axios.get(rentString);
         console.log(mes)}catch(e){console.log(e)}
-        rent.classList.add('done');
+        rentBtn.classList.add('done');
         location.reload();
     })
-    document.querySelector('.carContainer').appendChild(rent);
-    
+const buttonContainer = document.createElement('div');
+buttonContainer.classList.add('button-container');
 
+const nextBtn = document.createElement('button')
+nextBtn.classList.add('nextBtn');
+nextBtn.innerText = 'Next';
+const prevBtn = document.createElement('button')
+prevBtn.classList.add('prevBtn');
+prevBtn.innerText = 'Prev';
+prevBtn.addEventListener('click', showPrevCar);
+nextBtn.addEventListener('click', showNextCar);
+
+buttonContainer.appendChild(prevBtn);
+buttonContainer.appendChild(nextBtn);
+document.querySelector('.carContainer').appendChild(rentBtn);
+
+document.querySelector('.carContainer').appendChild(buttonContainer);
+console.log('initialized')
     showCar(0);
 }
 initialize()

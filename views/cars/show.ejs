@@ -35,6 +35,11 @@
                             <% } %>
                             
                                 <% if(!currentUser.isCustomer){ %> 
+                                    <td>
+                                        <form action="/cars/<%=car.carModelID%>/addAvailableCar" method="get">
+                                            <button class="btn btn-primary">Add Available Car</button>
+                                        </form>
+                                    </td>
                             <td>
                                     <form action="/cars/<%=car.carModelID%>/edit" method="get">
                                         <button class="btn btn-success">Edit</button>
@@ -56,10 +61,7 @@
     <% if(nbCarsCanStillRent||true) {%> 
     <h3>You can still rent <%= nbCarsCanStillRent %> cars</h3>
     
-    <div class="button-container">
-        <button class="prevBtn">Previous</button>
-        <button class="nextBtn">Next</button>
-    </div>
+  
     <div class="carContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/showOneCar.js"></script>

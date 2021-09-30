@@ -22,3 +22,9 @@ img{
     bottom:50px;
     left:500px;
 }
+
+.carContainer{
+    border:1px solid black;
+    margin:0 1em;
+    padding: 1em;
+}

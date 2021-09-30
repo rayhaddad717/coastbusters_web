@@ -1,5 +1,5 @@
 const { personSchema, loginSchema,carSchema } = require('./utils/schemas');
-
+const AppError = require('./utils/appError');
 module.exports.isLoggedIn = (req,res,next)=>{
     if(req.isAuthenticated()){
     next();}
@@ -30,6 +30,7 @@ module.exports.validatePerson = (req, res, next) => {
 
 //middleware joi validation
 module.exports.validateCar = (req, res, next) => {
+    console.log(req.body)
     const { error } = carSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',');

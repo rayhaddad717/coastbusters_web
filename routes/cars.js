@@ -10,11 +10,11 @@ const middleware = require('../middleware');
 
 
 router.delete('/return/:CarID', catchAsync(cars.returnCar))
-
+const Car = require('../models/car')
 //Customer
 router.get('/mycars', middleware.isLoggedIn, catchAsync(async (req, res) => {
-    const cars = await dbFunctions.getRentedCarsByPerson(req.user.PersonID)
-    const carsArray = cars.recordset;
+    const carsArray = await Car.getRentedCarsByPerson(req.user.PersonID)
+   
     res.render('cars/mycars', { carsArray });
 }))
 
@@ -31,7 +31,7 @@ const upload = multer({ storage });
 router.route('/')
     //Get All Cars
     .get(catchAsync(async (req, res) => {
-        const cars = await dbFunctions.getAllCars();
+        const cars = await Car.getAllCars();
         res.render('cars/index', { cars });
     }))
 
@@ -39,7 +39,7 @@ router.route('/')
     .post(middleware.validateCar, catchAsync(cars.addNewCar));
 
 router.get('/rent/:CarID', catchAsync(cars.rentCar))
-router.get('/getAvailableCars/:id', (req, res, next) => { console.log('enetered available'); next() }, cars.getAvailableCars);
+router.get('/getAvailableCars/:id',cars.getAvailableCars);
 
 router.route('/:id')
     //Get One Car
@@ -51,7 +51,7 @@ router.route('/:id')
     .delete(catchAsync(cars.deleteCar));
 //Edit One Car
 router.get('/:id/edit', catchAsync(async (req, res) => {
-    const car = await dbFunctions.getOneCar(req.params.id);
+    const car = await Car.getOneCar(req.params.id);
     res.render('cars/editCar', { car })
 
 }))
@@ -61,8 +61,7 @@ router.route('/:id/addAvailableCar')
         res.render('cars/addAvailableCar',{carModelID:req.params.id});
     })
     //add new available car
-    .post(upload.single('image'), catchAsync(cars.addAvailableCar))
-    // .post(upload.single('image'),(req,res)=>{res.send(req.body)})
+    .post(upload.single('image'), catchAsync(cars.addAvailableCar));
 
 
 
