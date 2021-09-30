@@ -1,110 +1,73 @@
 const express = require('express');
 const router = express.Router();
-const dbObjects = require('../utils/dbObjects')
 const dbFunctions = require('../utils/dbFunctions');
 const catchAsync = require('../utils/catchAsync');
 const { carSchema } = require('../utils/schemas');
 const AppError = require('../utils/appError');
-//middleware test
-const checkLogin = (req, res, next) => {
-    if (true) {
-        console.log('entered middleware')
-        next();
-    }
-}
+const cars = require('../controllers/cars');
+const middleware = require('../middleware');
 
-//middleware joi validation
-const validateCar = (req, res, next) => {
-    const { error } = carSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        throw new AppError(error.message, '400');
-    }
-    else {
-        next();
-    }
-}
+
+
+router.delete('/return/:CarID', catchAsync(cars.returnCar))
+
 //Customer
-router.get('/mycars', catchAsync(async (req, res) => {
-    // if (isLoggedIn) {
-    const cars = await dbFunctions.getRentedCarsByPerson(currentLoggedInUserPersonInfo.personID)
+router.get('/mycars', middleware.isLoggedIn, catchAsync(async (req, res) => {
+    const cars = await dbFunctions.getRentedCarsByPerson(req.user.PersonID)
     const carsArray = cars.recordset;
-    // res.render('mycars', { carsArray, isLoggedIn });
-    res.render('mycars', { carsArray });
-    // } else res.render('mycars', { isLoggedIn });
+    res.render('cars/mycars', { carsArray });
 }))
 
 
 //Employee
 //Add a new car
 router.get('/new', catchAsync(async (req, res) => {
-    // if (isLoggedIn && currentLoggedInUser.isCustomer === false) {
-    //     console.log('employee can login')
-    // res.render('newCar', { isLoggedIn })
-    res.render('cars/newCar')
-    // }
-    // else {
-    //     res.render('nopermission', { isLoggedIn })
-    // }
+    res.render('cars/newCar');
 }))
 
+const { storage, a } = require('../cloudinary/index');
+const multer = require('multer');
+const upload = multer({ storage });
+router.route('/')
+    //Get All Cars
+    .get(catchAsync(async (req, res) => {
+        const cars = await dbFunctions.getAllCars();
+        res.render('cars/index', { cars });
+    }))
 
-//Get All Cars
-router.get('/', checkLogin, catchAsync(async (req, res) => {
-    // if (isLoggedIn && currentLoggedInUser.isCustomer === false) {
-    //     console.log('employee can login')
-    //     const cars = await dbFunctions.getAllCars();
-    //     res.render('cars/cars', { cars, isLoggedIn });
-    // }
-    // else {
-    //     res.render('nopermission', { isLoggedIn })
-    // }
-    const cars = await dbFunctions.getAllCars();
-    // res.render('cars/cars', { cars, isLoggedIn });
-    res.render('cars/index', { cars });
-}))
+    //Post a new car
+    .post(middleware.validateCar, catchAsync(cars.addNewCar));
 
-//Post a new car
-router.post('/', validateCar, catchAsync(async (req, res) => {
-    const carModel = new dbObjects.CarModel({ ...req.body })
-    const carModelID = dbFunctions.insertNewCarModel(carModel);
-    console.log(carModelID);
-    req.flash('success', 'successfully added a new car')
-    setTimeout(() => res.redirect('/cars'), 500);
-}))
-//Get One Car
-router.get('/:id', catchAsync(async (req, res) => {
-    // if (isLoggedIn && currentLoggedInUser.isCustomer === false) {
-    const car = await dbFunctions.getOneCar(req.params.id);
-    const cars = [car];
-    // res.render('cars', { cars, isLoggedIn });
-    res.render('cars/show', { cars });
-    // }
-    // else {
-    //     res.render('nopermission', { isLoggedIn })
-    // }
-}))
+router.get('/rent/:CarID', catchAsync(cars.rentCar))
+router.get('/getAvailableCars/:id', (req, res, next) => { console.log('enetered available'); next() }, cars.getAvailableCars);
+
+router.route('/:id')
+    //Get One Car
+    .get(catchAsync(cars.showOneCar))
+    //edit one car
+    .patch(middleware.validateCar, catchAsync(cars.editCar))
+
+    //Delete One Car
+    .delete(catchAsync(cars.deleteCar));
 //Edit One Car
 router.get('/:id/edit', catchAsync(async (req, res) => {
     const car = await dbFunctions.getOneCar(req.params.id);
-    // res.render('editCar', { car, isLoggedIn })
     res.render('cars/editCar', { car })
 
 }))
 
-router.patch('/:id', validateCar, catchAsync(async (req, res) => {
-    const editedCar = new dbObjects.CarModel({ ...req.body })
-    await dbFunctions.editCarModel(editedCar);
-    setTimeout(() => { res.redirect('/cars') }, 500)
-}))
+router.route('/:id/addAvailableCar')
+    .get((req, res) => {
+        res.render('cars/addAvailableCar',{carModelID:req.params.id});
+    })
+    //add new available car
+    .post(upload.single('image'), catchAsync(cars.addAvailableCar))
+    // .post(upload.single('image'),(req,res)=>{res.send(req.body)})
 
 
-//Delete One Car
-router.delete('/:id', catchAsync(async (req, res) => {
-    const carModelID = req.params.id;
-    await dbFunctions.deleteOneCarModel(carModelID);
-    res.redirect('/cars')
-}))
+
+
+
 
 
 

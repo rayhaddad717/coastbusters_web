@@ -7,7 +7,9 @@
                 <th>Manufacturer</th>
                 <th>Year</th>
                 <th>BHP</th>
+                <% if(!currentUser.isCustomer) {%> 
                 <th class="text-center" colspan="3">Buttons</th>
+                <% } %> 
             </tr>
         </thead>
         <% for(let car of cars) {%>
@@ -27,9 +29,10 @@
                     </td>
                     <td>
                         <form action="/cars/<%=car.carModelID%>">
-                            <button class="btn btn-primary">View</button>
+                            <button class="btn btn-primary">Details</button>
                         </form>
                     </td>
+                    <% if(!currentUser.isCustomer) {%> 
                     <td>
                         <form action="/cars/<%=car.carModelID%>/edit" method="get">
                             <button class="btn btn-success">Edit</button>
@@ -40,17 +43,16 @@
                             <button class="btn btn-danger col-md">Delete</button>
                         </form>
                     </td>
+                    <% } %> 
 
             </tr>
             <%} %>
     </table>
+    <% if(!currentUser.isCustomer) {%> 
     <form action="/cars/new" method="GET">
         <div class="d-grid gap-2">
             <button class="btn btn-primary" type="submit">ADD A NEW CAR</button>
 
         </div>
     </form>
-    <!-- <%//}else{ %>
-            <h1>You are not logged in.</h1>
-            <h2>Log in or create a new account</h2>
-            <% //} %> -->
+    <% } %> 

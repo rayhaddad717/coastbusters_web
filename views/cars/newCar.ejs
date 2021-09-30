@@ -1,7 +1,7 @@
 <% layout ('layouts/boilerplate')%>
 
     <h1>Kindly Fill the below information to add a new car to our garage</h1>
-    <form class="d-inline needs-validation" action="/cars" method="POST" novalidate>
+    <form class="d-inline needs-validation" action="/cars" method="POST" novalidate enctype="multipart/form-data">
         <div class="container-fluid">
             <div class=" row mt-2">
                 <label class="col form-label" for="name">Car Name</label>
@@ -121,6 +121,14 @@
                     Please enter a valid Torque Value!
                 </div>
             </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="Image">Image</label>
+                <input required class="col form-control" type="file" name="image" id="Image" >
+                
+            </div>
+          
+
         </div>
         <button class="btn btn-primary" type="submit">Submit Data</button>
         <button class="btn btn-success" type="reset">Undo All Changes</button>

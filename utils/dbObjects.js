@@ -16,14 +16,13 @@ module.exports.PersonObject = class PersonObject {
         this.personID = person.PersonID;
         this.firstName = person.FirstName;
         this.lastName = person.LastName;
-        this.dateOfBirth = person.DOB;
+        this.dateOfBirth = person.DateOfBirth;
         this.address = person.Address;
         this.isCustomer = person.isCustomer;
         this.subscriptionID = person.SubscriptionID;
-    };
-    addCustomerInfo(accidentsMade, nbOfRentedCars) {
-        this.accidentsMade = accidentsMade;
-        this.nbOfRentedCars = nbOfRentedCars;
+        this.accidentsMade = person.AccidentsMade;
+        this.nbOfRentedCars = person.NbOfRentedCars;
+        console.log(person.AccidentsMade,person.DateOfBirth,'constructor')
     };
     print() {
         const { personID, firstName, lastName, dateOfBirth, address, isCustomer, subscriptionID, accidentsMade, nbOfRentedCars } = this;

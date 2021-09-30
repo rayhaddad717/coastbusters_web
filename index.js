@@ -9,7 +9,6 @@ const usersRoutes = require('./routes/users');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const flash = require('connect-flash')
-const dbObjects = require('./utils/dbObjects')
 const dbFunctions = require('./utils/dbFunctions');
 const { render } = require('ejs');
 const AppError = require('./utils/appError');
@@ -22,16 +21,29 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser('thisismysecret'));
 
+
+
+//use redis as a session store
+const redis = require('redis')
+const RedisStore = require('connect-redis')(session)
+const redisClient = redis.createClient({url: process.env.redisURL})
+
 //setting up the options for the session
 const sessionConfig = {
     resave: false,
     saveUninitialized: false,
     secret: 'thisismysecret',
     cookie: {
-        maxAge: 1000 * 60 * 20
-    }
+        maxAge: 1000 * 60 * 60 * 72,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true    },
+    store: new RedisStore({ client: redisClient })
 }
+
 app.use(session(sessionConfig));
+
+
+
 app.use(methodOverride('_method'));
 //Adding static files
 app.set('public', path.join(__dirname), 'public')
@@ -41,82 +53,61 @@ app.use(flash());
 
 
 //passport
-const passport=require('passport');
-const LocalStrategy=require('passport-local');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const passportStrategyCallback = require('./utils/passportStrategyCallback');
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use('local-login',new LocalStrategy({
+passport.use('local-login', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password'
-  },
-  async function(username,password,done){
-      const user=await dbFunctions.checkLogin(username,password);
-    try{
-        console.log(user);
-        if(user===null){
-            return done(null,false);
-        }else{
-            console.log('loggedin')
-        return done(null,user)}
-    }catch(e){
-        console.log(e)
-        return done(e,false)
-    }
-}
+}, passportStrategyCallback
 
-  ));
+));
 
-  passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user.loginID);
-  });
-  
-  passport.deserializeUser(async function(id, done) {
-  try{  
-     const user= await dbFunctions.findByID(id);
-    done(null,user)}
-    catch(e){done(e,undefined);}
-    });
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+passport.deserializeUser(async function (id, done) {
+    try {
+        const user = await dbFunctions.findByID(id);
+        done(null, user)
+    }
+    catch (e) { done(e, undefined); }
+});
 
 //middleware to initialize the variable isLoggedIn in the session to false
-app.use((req, res, next) => {
-    res.locals.isLoggedIn=req.isAuthenticated();
-    res.locals.messages = req.flash('success');
+app.use(async (req, res, next) => {
+    res.locals.isLoggedIn = req.isAuthenticated();
+    res.locals.success = req.flash('success');
+    res.locals.warnings= req.flash('warning');
+    res.locals.errors = req.flash ('error');
     if (req.user) {
-        res.locals.personID = req.user.PersonID;
-        res.locals.loginID = req.user.loginID;
+        // res.locals.personID = req.user.PersonID;
+        // res.locals.loginID = req.user.loginID;
+        // res.locals.isCustomer = req.user.isCustomer;
+        res.locals.currentUser = req.user;
+        res.locals.currentPerson= await dbFunctions.getPersonInfo(req.user.PersonID);
     }
     next();
 })
+
+//sql sanitizer
 const es = require('./utils/express-sanitize/index');
 app.use(es);
 
 //Home
 app.get('/', async (req, res) => {
-    // if (isLoggedIn) {
-    //     currentLoggedInUserPersonInfo = await dbFunctions.getPersonInfo(currentLoggedInUser);
-    // }
-   res.render('home',);
-    
+    res.render('home',);
+
 })
 //Seting up RESTful routes
 app.use('/cars', carRoutes);
 app.use('/accounts', accRoutes)
 app.use('/users', usersRoutes);
+
+
 
 //Search
 app.get('/search', async (req, res) => {

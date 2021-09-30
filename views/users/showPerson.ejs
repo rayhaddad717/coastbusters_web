@@ -40,7 +40,7 @@
                 <tr class="row">
                     <th class="col-5 offset-1">isCustomer</th>
                     <td class="col-5">
-                        <%=isCustomer %>
+                        <%=currentUser.isCustomer %>
                     </td>
                 </tr>
                 <tr class="row">
@@ -49,5 +49,22 @@
                         <%=subscriptionID %>
                     </td>
                 </tr>
+                    <tr class="row">
+                        <th class="col-5 offset-1">
+                            Nb of rented Cars
+                        </th>
+                        <td class="col-5">
+                            <%=person.nbOfRentedCars %> 
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <th class="col-5 offset-1">
+                            Nb of accidents Made
+                        </th>
+                        <td class="col-5">
+                            <%=person.accidentsMade %> 
+                        </td>
+                    </tr>
+
             </tbody>
     </table>

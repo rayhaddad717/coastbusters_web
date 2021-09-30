@@ -1,4 +1,5 @@
 <% layout ('layouts/boilerplate')%>
+    <link rel="stylesheet" href="/css/showOneCar.css">
     <!-- <%//if(isLoggedIn) {%> -->
     <table class="table">
         <thead>
@@ -23,15 +24,18 @@
                     {carModelID,name,manufacturer,country,year,bhp,nbOfSeats,nbCarsLeft,engineType,emissions,torque}=car;
                     %>
                     <% const
-                        info=[carModelID,name,manufacturer,country,year,bhp,nbOfSeats,nbCarsLeft,engineType,emissions,torque];
+                        info=[name,manufacturer,country,year,bhp,nbOfSeats,nbCarsLeft,engineType,emissions,torque];
                         %>
+                        <td class="carModelID"><%= carModelID %> </td>
                         <% for(let i of info) {%>
 
                             <td>
                                 <%=i %>
                             </td>
                             <% } %>
-                                <td>
+                            
+                                <% if(!currentUser.isCustomer){ %> 
+                            <td>
                                     <form action="/cars/<%=car.carModelID%>/edit" method="get">
                                         <button class="btn btn-success">Edit</button>
                                     </form>
@@ -41,12 +45,24 @@
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
                                 </td>
+                                <% } %> 
 
             </tr>
             <%} %>
     </table>
 
-    <!-- <%//}else{ %>
-            <h1>You are not logged in.</h1>
-            <h2>Log in or create a new account</h2>
-            <% //} %> -->
+
+    <h2>Available Cars:</h2>
+    <% if(nbCarsCanStillRent||true) {%> 
+    <h3>You can still rent <%= nbCarsCanStillRent %> cars</h3>
+    
+    <div class="button-container">
+        <button class="prevBtn">Previous</button>
+        <button class="nextBtn">Next</button>
+    </div>
+    <div class="carContainer"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/showOneCar.js"></script>
+    <% }else {%>
+        <h3>Sorry you cannot rent any more vehicles</h3>
+        <% } %>  

@@ -22,7 +22,7 @@
                 </li>
                 <% if(isLoggedIn) {%>
                     <li class="nav-item">
-                        <a class="nav-link " href="/users/<%=personID%>">MyProfile</a>
+                        <a class="nav-link " href="/users/<%=currentUser.PersonID%>">MyProfile</a>
                     </li>
                     <%} %>
             </ul>

@@ -1,5 +1,6 @@
 const Joi = require('joi');
 module.exports.carSchema = Joi.object({
+    CarModelID: Joi.number(),
     Name: Joi.string().required(),
     Manufacturer: Joi.string().required(),
     Country: Joi.string().required(),
@@ -9,7 +10,8 @@ module.exports.carSchema = Joi.object({
     NbCarsLeft: Joi.number().min(0).required(),
     EngineType: Joi.string().required(),
     Emissions: Joi.number().min(0).required(),
-    Torque: Joi.number().min(0).required()
+    Torque: Joi.number().min(0).required(),
+    image:Joi.string().required()
 
 
 });

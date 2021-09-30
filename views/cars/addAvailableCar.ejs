@@ -1,0 +1,43 @@
+<% layout('layouts/boilerplate') %>
+    <form class="d-inline needs-validation" action="/cars/<%=carModelID %>/addAvailableCar" method="POST" novalidate
+        enctype="multipart/form-data">
+        <div class="container-fluid">
+            <div class=" row mt-2">
+                <label class="col form-label" for="name">Car Color</label>
+                <input required class="col form-control" type="text" name="color" id="color">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class="offset-6 invalid-feedback">
+                    Please enter a valid car Name!
+                </div>
+
+            </div>
+
+            <div class=" row mt-2">
+                <label class="col form-label" for="manufacturer">Car condition</label>
+                <input required class="col form-control" type="text" name="condition" id="condition">
+                <div class="offset-6 valid-feedback">
+                    Looks good!
+                </div>
+                <div class=" offset-6 invalid-feedback">
+                    Please enter a valid Car condition!
+                </div>
+
+            </div>
+
+            
+            <div class=" row mt-2">
+                <label class="col form-label" for="Image">Image</label>
+                <input required class="col form-control" type="file" name="image" id="Image">
+
+            </div>
+
+
+        </div>
+        <button class="btn btn-primary" type="submit">Submit Data</button>
+        <button class="btn btn-success" type="reset">Undo All Changes</button>
+    </form>
+    <form class="d-inline" action="/cars" method="GET">
+        <button class="btn btn-danger" type="submit">Cancel</button>
+    </form>
