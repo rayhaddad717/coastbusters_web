@@ -20,7 +20,6 @@ module.exports = class LoginCredential {
         const info = await mssql.query(`select * from [coastBusters].[dbo].[LoginCredentials] where loginID=${loginID}`)
         if (info.recordset[0]) {
             const { isCustomer, PersonID } = info.recordset[0];
-            // return new dbObjects.LoginCredentialObject({ loginID, PersonID, isCustomer })
             return new LoginCredential({ loginID, PersonID, isCustomer })
         } else { return null };
 
@@ -62,7 +61,6 @@ module.exports = class LoginCredential {
                 const idResult = await mssql.query(`SELECT IDENT_CURRENT ('LoginCredentials') as id `)
                 const loginID = idResult.recordset[0].id;
                 const { isCustomer, username } = info;
-                // const newLogin = new dbObjects.LoginCredentialObject({ loginID, PersonID: personID, isCustomer,username });
                 const newLogin = new LoginCredential({ loginID, PersonID: personID, isCustomer, username });
                 return [newLogin, person, subscription];
             } catch (e) {
@@ -84,7 +82,6 @@ module.exports = class LoginCredential {
             logins = logins.recordset;
             const loginsArray = [];
             for (let login of logins) {
-                // const newLogin = new dbObjects.LoginCredentialObject({ ...login });
                 const newLogin = new LoginCredential({ ...login });
 
                 loginsArray.push(newLogin);

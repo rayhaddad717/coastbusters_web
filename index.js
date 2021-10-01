@@ -26,7 +26,7 @@ app.use(cookieParser('thisismysecret'));
 //use redis as a session store
 const redis = require('redis')
 const RedisStore = require('connect-redis')(session)
-const redisClient = redis.createClient({url: process.env.redisURL})
+const redisClient = redis.createClient({ url: process.env.redisURL })
 
 //setting up the options for the session
 const sessionConfig = {
@@ -36,7 +36,8 @@ const sessionConfig = {
     cookie: {
         maxAge: 1000 * 60 * 60 * 72,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        httpOnly: true    },
+        httpOnly: true
+    },
     store: new RedisStore({ client: redisClient })
 }
 
@@ -76,19 +77,19 @@ passport.deserializeUser(async function (id, done) {
     }
     catch (e) { done(e, undefined); }
 });
-const Person= require('./models/person');
+const Person = require('./models/person');
 //middleware to initialize the variable isLoggedIn in the session to false
 app.use(async (req, res, next) => {
     res.locals.isLoggedIn = req.isAuthenticated();
     res.locals.success = req.flash('success');
-    res.locals.warnings= req.flash('warning');
-    res.locals.errors = req.flash ('error');
+    res.locals.warnings = req.flash('warning');
+    res.locals.errors = req.flash('error');
     if (req.isAuthenticated()) {
         res.locals.currentUser = req.user;
-        res.locals.currentPerson= await Person.getPersonInfo(req.user.PersonID);
-    }else{
-        res.locals.currentUser=false;
-        res.locals.currentPerson=false;
+        res.locals.currentPerson = await Person.getPersonInfo(req.user.PersonID);
+    } else {
+        res.locals.currentUser = false;
+        res.locals.currentPerson = false;
     }
     next();
 })
@@ -114,7 +115,6 @@ app.use('/users', usersRoutes);
 app.get('/search', async (req, res) => {
     const query = req.query;
     let results = await dbFunctions.search(query.q);
-    console.log(results);
     if (results.recordset.length === 0) {
         results = undefined;
     } else {
@@ -163,7 +163,7 @@ app.use((err, req, res, next) => {
     const { status = 500, message = 'something went wrong' } = err;
     res.status(status);
     res.render('error', { err })
-    
+
 })
 //Start Listening
 const port = process.env.PORT ? process.env.PORT : 3000;

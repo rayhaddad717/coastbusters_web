@@ -4,7 +4,6 @@ const Person = require('../models/person');
 module.exports.addNewCar = async (req, res) => {
     const carModel = new Car({ ...req.body })
     const carModelID = Car.insertNewCarModel(carModel);
-    console.log(carModelID);
     req.flash('success', 'successfully added a new car')
     setTimeout(() => res.redirect('/cars'), 500);
 };
@@ -32,7 +31,6 @@ module.exports.showOneCar = async (req, res) => {
 };
 
 module.exports.getAvailableCars = async (req, res) => {
-    console.log('entered getAvailable Cars');
     const cars = await Car.getAvailableCarsFromCarModelID(req.params.id);
 
     res.send({ cars });
@@ -42,16 +40,15 @@ module.exports.rentCar = async (req, res) => {
 
 
     if (req.isAuthenticated()) {
-        
+
         const { CarID } = req.params;
         const { PersonID } = req.user;
         const person = await Person.getPersonInfo(PersonID);
         const maxAllowedCars = await Subscription.getNbOfAllowedCars(person.subscriptionID);
-        console.log('maxcar vs nb rentedcars',maxAllowedCars, person.nbOfRentedCars);
-        if(person.nbOfRentedCars < maxAllowedCars){
+        if (person.nbOfRentedCars < maxAllowedCars) {
             await Car.rentCar(CarID, PersonID);
             res.send('ok').status(200);
-        }else{
+        } else {
             res.send('cant rent any more cars').status(200);
         }
     }
@@ -62,7 +59,6 @@ module.exports.returnCar = async (req, res) => {
     const { CarID } = req.params;
     const { PersonID } = req.user;
     await Car.returnCar(CarID, PersonID);
-console.log('about to redirct')
     res.send('ok').status(200);
 
 }

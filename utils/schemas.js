@@ -6,6 +6,7 @@ module.exports.carSchema = Joi.object({
     Country: Joi.string().required(),
     Year: Joi.number().min(1899).required(),
     BHP: Joi.number().min(0).required(),
+    NbCarsLeft: Joi.number(),
     NbOfSeats: Joi.number().min(0).required(),
     EngineType: Joi.string().required(),
     Emissions: Joi.number().min(0).required(),
@@ -21,7 +22,7 @@ module.exports.personSchema = Joi.object({
     DOB: Joi.string().required(),
     address: Joi.string().required(),
     password: Joi.string().required(),
-    username:Joi.string().required(),
+    username: Joi.string().required(),
     subscriptionTypeSelect: Joi.allow(),
     personType: Joi.string()
 

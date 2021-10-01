@@ -4,7 +4,7 @@
     <form action="/cars/<%=car.carModelID %>?_method=PATCH" method="POST">
         <div class="container-fluid">
             <div class=" row mt-2">
-                <label class="col" for="carModelID">Car Name</label>
+                <label class="col" for="carModelID">Car ModelID</label>
                 <input class="col" type="text" name="CarModelID" id="namcarModelID" value="<%=car.carModelID%> "
                     readonly>
 
@@ -34,6 +34,11 @@
             </div>
 
             <div class=" row mt-2">
+                <label class="col" for="nbCarsLeft">Number of Cars Left</label>
+                <input class="col" type="number" name="NbCarsLeft" id="nbCarsLeft" readOnly value="<%=car.nbCarsLeft%>">
+
+            </div>
+            <div class=" row mt-2">
                 <label class="col" for="BHP">BHP</label>
                 <input class="col" type="number" name="BHP" id="BHP" value="<%=car.bhp%>">
 
@@ -60,7 +65,7 @@
 
             <div class=" row mt-2">
                 <label class="col" for="torque">torque</label>
-                <input class="col" type=" number" name="Torque" id="torque" value="<%=car.torque%>">
+                <input class="col" type="number" name="Torque" id="torque" value="<%=car.torque%>">
             </div>
         </div>
         <button class="btn btn-primary" type="submit">Submit Data</button>
