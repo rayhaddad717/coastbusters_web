@@ -25,7 +25,7 @@ router.get('/new', catchAsync(async (req, res) => {
     res.render('cars/newCar');
 }))
 
-const { storage, a } = require('../cloudinary/index');
+const { storage} = require('../cloudinary/index');
 const multer = require('multer');
 const upload = multer({ storage });
 router.route('/')
@@ -45,23 +45,24 @@ router.route('/:id')
     //Get One Car
     .get(catchAsync(cars.showOneCar))
     //edit one car
-    .patch(middleware.validateCar, catchAsync(cars.editCar))
+    .patch(middleware.isEmployee,middleware.validateCar, catchAsync(cars.editCar))
 
     //Delete One Car
-    .delete(catchAsync(cars.deleteCar));
+    .delete(middleware.isEmployee,catchAsync(cars.deleteCar));
 //Edit One Car
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', middleware.isEmployee,catchAsync(async (req, res) => {
     const car = await Car.getOneCar(req.params.id);
     res.render('cars/editCar', { car })
 
 }))
 
 router.route('/:id/addAvailableCar')
+    .all(middleware.isEmployee)
     .get((req, res) => {
         res.render('cars/addAvailableCar',{carModelID:req.params.id});
     })
     //add new available car
-    .post(upload.single('image'), catchAsync(cars.addAvailableCar));
+    .post(upload.single('image'),catchAsync(cars.addAvailableCar));
 
 
 

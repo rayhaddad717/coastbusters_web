@@ -21,7 +21,7 @@ const connectToDB = async () => {
 module.exports.connectToDB = connectToDB;
 //Function to search for a manufacturer
 //Search
-search = async function (searchText) {
+const search = async function (searchText) {
     try {
         await connectToDB();
         const result = await mssql.query(`SELECT * FROM [coastBusters].[dbo].[CarModels] where (Manufacturer) like '${searchText}%' OR (Name) like '${searchText}%'`)

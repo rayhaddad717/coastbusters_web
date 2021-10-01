@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const middleware= require('../middleware');
 router.use(middleware.isLoggedIn);
-router.get('/', async (req, res) => {
+router.get('/', middleware.isEmployee,async (req, res) => {
 
     const logins = await LoginCredential.getAllLogins();
     res.render('users/users', { logins })

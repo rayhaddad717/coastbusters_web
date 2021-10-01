@@ -25,31 +25,53 @@ module.exports = class LoginCredential {
         } else { return null };
 
     };
+    static checkUsernameExists = async (username) => {
+        await dbFunctions.connectToDB();
+        const command = `select * from LoginCredentials where username='${username}'`;
+        try {
+            const res = await mssql.query(command);
+            if (res.recordset.length === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     //Insert new login user Person Info
     static insertNewLoginUsingPersonInfo = async function (info) {
 
-        const subscription = await Subscription.insertNewSubscription(info.subscriptionTypeSelect);
-        const subscriptionID = subscription.subsID;
-        info = { ...info, subscriptionID };
-        const person = await Person.insertNewPerson(info);
-        const personID = person.personID;
-        try {
-            info.isCustomer = (info.isCustomer ? 1 : 0);
-            let pool = await mssql.connect(dbFunctions.config)
-            let result = await pool.request()
-                .input('personID', mssql.NVarChar(20), personID)
-                .input('username', mssql.NVarChar(50), info.username)
-                .input('password', mssql.NVarChar(100), info.hashedPassword)
-                .input('isCustomer', mssql.Bit, info.isCustomer)
-                .query('insert into [coastBusters].[dbo].LoginCredentials (PersonID,Password,isCustomer,username) values(@personID,@password,@isCustomer,@username)');
-            const idResult = await mssql.query(`SELECT IDENT_CURRENT ('LoginCredentials') as id `)
-            const loginID = idResult.recordset[0].id;
-            const { isCustomer, username } = info;
-            // const newLogin = new dbObjects.LoginCredentialObject({ loginID, PersonID: personID, isCustomer,username });
-            const newLogin = new LoginCredential({ loginID, PersonID: personID, isCustomer, username });
-            return [newLogin, person, subscription];
-
-        } catch (e) { console.log('login', e) }
+        const uniqueUsername = await LoginCredential.checkUsernameExists(info.username);
+        if (uniqueUsername) {
+            const subscription = await Subscription.insertNewSubscription(info.subscriptionTypeSelect);
+            const subscriptionID = subscription.subsID;
+            info = { ...info, subscriptionID };
+            const person = await Person.insertNewPerson(info);
+            const personID = person.personID;
+            try {
+                info.isCustomer = (info.isCustomer ? 1 : 0);
+                let pool = await mssql.connect(dbFunctions.config)
+                let result = await pool.request()
+                    .input('personID', mssql.NVarChar(20), personID)
+                    .input('username', mssql.NVarChar(50), info.username)
+                    .input('password', mssql.NVarChar(100), info.hashedPassword)
+                    .input('isCustomer', mssql.Bit, info.isCustomer)
+                    .query('insert into [coastBusters].[dbo].LoginCredentials (PersonID,Password,isCustomer,username) values(@personID,@password,@isCustomer,@username)');
+                const idResult = await mssql.query(`SELECT IDENT_CURRENT ('LoginCredentials') as id `)
+                const loginID = idResult.recordset[0].id;
+                const { isCustomer, username } = info;
+                // const newLogin = new dbObjects.LoginCredentialObject({ loginID, PersonID: personID, isCustomer,username });
+                const newLogin = new LoginCredential({ loginID, PersonID: personID, isCustomer, username });
+                return [newLogin, person, subscription];
+            } catch (e) {
+                console.log('login', e)
+            }
+        }
+        else {
+            return false;
+        }
 
     };
 
@@ -102,8 +124,8 @@ module.exports = class LoginCredential {
             console.log(e)
         }
     };
-    
-    
+
+
 
 
 };

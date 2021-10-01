@@ -14,6 +14,7 @@ const users=require('../controllers/users')
 const middleware=require('../middleware')
 
 router.route('/login')
+.all(middleware.alreadyLoggedIn)
 .get((req,res,next)=>{
     res.render('accounts/login')
 }).post(middleware.validateLogin,passport.authenticate('local-login', {failureMessage:true, failureRedirect: '/accounts/login',failureFlash:true }),
@@ -25,6 +26,7 @@ router.get('/logout',(req,res)=>{
     res.redirect('/');
 })
 router.route('/signup')
+.all(middleware.alreadyLoggedIn)
 .get((req,res)=>{
     res.render('accounts/signup')
 })

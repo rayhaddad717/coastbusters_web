@@ -18,7 +18,7 @@ const CarModel = class {
         this.torque = car.Torque;
         this.emissions = car.Emissions;
         this.nbOfSeats = car.NbOfSeats;
-        this.nbCarsLeft = 0;
+        this.nbCarsLeft =car.NbCarsLeft;
         this.image = car.image;
 
     };
@@ -177,20 +177,17 @@ static rentCar = async (carID, personID) => {
 };
 static returnCar = async (carId, personId) => {
     const commandString = `update AvailableCars set isRented=0,RentedByPersonID=null,RentedDate=null where CarID=${carId}`;
-    Person.decreaseNbRentedCars(personId);
+   await  Person.decreaseNbRentedCars(personId);
     try {
-        await connectToDB();
+        await dbFunctions.connectToDB();
         await mssql.query(commandString);
         console.log(commandString);
-    } catch (e) {
-        console.log(e);
-    }
-    let query = `select CarModelID from AvailableCars where CarID=${carID}`;
-    try {
+    
+    let query = `select CarModelID from AvailableCars where CarID=${carId}`;
         const res = await mssql.query(query);
         const carModelID = res.recordset[0].CarModelID;
         query = `update CarModels set NbCarsLeft = NbCarsLeft+1 where CarModelID=${carModelID}`;
-        await mssql.query();
+        const result = await mssql.query(query);
     }
     catch (e) {
         console.log(e);

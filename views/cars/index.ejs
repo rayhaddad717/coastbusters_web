@@ -1,13 +1,13 @@
 <% layout ('layouts/boilerplate')%>
-    <!-- <%//if(isLoggedIn) {%> -->
-    <table class="table">
+<div class="tableContainer" style="overflow-x: scroll">
+<table class="table">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Manufacturer</th>
                 <th>Year</th>
                 <th>BHP</th>
-                <% if(!currentUser.isCustomer) {%> 
+                <% if(currentUser && !currentUser.isCustomer) {%> 
                 <th class="text-center" colspan="3">Buttons</th>
                 <% } %> 
             </tr>
@@ -32,7 +32,7 @@
                             <button class="btn btn-primary">Details</button>
                         </form>
                     </td>
-                    <% if(!currentUser.isCustomer) {%> 
+                    <% if(currentUser && !currentUser.isCustomer) {%> 
                     <td>
                         <form action="/cars/<%=car.carModelID%>/edit" method="get">
                             <button class="btn btn-success">Edit</button>
@@ -48,7 +48,8 @@
             </tr>
             <%} %>
     </table>
-    <% if(!currentUser.isCustomer) {%> 
+</div>
+    <% if(currentUser && !currentUser.isCustomer) {%> 
     <form action="/cars/new" method="GET">
         <div class="d-grid gap-2">
             <button class="btn btn-primary" type="submit">ADD A NEW CAR</button>

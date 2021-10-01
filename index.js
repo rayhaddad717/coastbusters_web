@@ -83,12 +83,12 @@ app.use(async (req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.warnings= req.flash('warning');
     res.locals.errors = req.flash ('error');
-    if (req.user) {
-        // res.locals.personID = req.user.PersonID;
-        // res.locals.loginID = req.user.loginID;
-        // res.locals.isCustomer = req.user.isCustomer;
+    if (req.isAuthenticated()) {
         res.locals.currentUser = req.user;
         res.locals.currentPerson= await Person.getPersonInfo(req.user.PersonID);
+    }else{
+        res.locals.currentUser=false;
+        res.locals.currentPerson=false;
     }
     next();
 })
@@ -148,7 +148,7 @@ app.get('/search', async (req, res) => {
         delete car.NbCarsLeft;
 
     })
-    res.render('cars/show', { cars })
+    res.render('cars/index', { cars })
 })
 
 
@@ -163,6 +163,7 @@ app.use((err, req, res, next) => {
     const { status = 500, message = 'something went wrong' } = err;
     res.status(status);
     res.render('error', { err })
+    
 })
 //Start Listening
 const port = process.env.PORT ? process.env.PORT : 3000;
